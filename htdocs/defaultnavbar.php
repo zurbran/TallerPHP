@@ -1,10 +1,10 @@
 <nav class="navbar navbar-dark navbar-expand bg-dark fixed-top toggle collapsed">
 		<a class="navbar-brand" href="#">Biblioteca UNLP</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample06" aria-controls="navbarsExample06" aria-expanded="false" aria-label="Toggle navigation">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#indexnavbar" aria-controls="indexnavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
-		<div class="collapse navbar-collapse" id="navbarsExample06">
+		<div class="collapse navbar-collapse" id="indexnavbar">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active">
 					<a class="nav-link" href="#">Políticas <span class="sr-only"></span></a>
