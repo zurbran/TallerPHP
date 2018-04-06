@@ -28,7 +28,7 @@
 
         $conn       = $connect;
 
-        $links      = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 7;
+        $links      = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 10;
         $query      = "SELECT p.nombre, p.sinopsis, p.anio, g.genero, p.contenidoimagen, p.tipoimagen FROM peliculas p INNER JOIN generos g ON (p.generos_id = g.id)";
 
         $Paginator  = new Paginator( $conn, $query );
@@ -67,7 +67,7 @@
 
     <hr>
 
-    <div style="height: 400px; overflow: auto;">
+    <div style="height: 600px; overflow: auto;">
         <table class="table table-bordered">
         <thead class="thead-dark">
             <tr>
@@ -100,17 +100,21 @@
             <td>@mdo</td>
             </tr>
         </tbody>
-    </div>
+    
         <?php
             endfor;
-            ?>
-    </table>
-        <div class="row">
-                <?php
-                echo $Paginator->createLinks( $links, 'pagination pagination-sm' );
-                ?>
-        </div>
+        ?>
 
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-6">
+            <?php
+            echo $Paginator->createLinks( $links, 'pagination','indexpages' );
+            ?>
+        </div>
     </div>
 
 </body>
