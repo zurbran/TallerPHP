@@ -15,7 +15,7 @@
   		</span>
 			<span class="nav-item dropdown show">
 			<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:white; text-decoration: none;">Iniciar Sesión / Registrarse</a>
-			<div class="dropdown-menu show" aria-labelledby="dropdown03">
+			<div class="dropdown-menu" aria-labelledby="dropdown03">
 				<div class="col-md-12">
 					<form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
 						<div class="form-group">
@@ -41,9 +41,9 @@
 					</div>
 				</div>
 			</div>
-</span>	
+			</span>	
 		</div>
-	</nav>
+</nav>
 
 
 

@@ -4,7 +4,7 @@
 <head>
 
 
-    <title>Cinema Rocha</title>
+    <title>Biblioteca UNLP</title>
 
     <!-- Bootstrap Core CSS -->
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
@@ -23,7 +23,6 @@
 
         <?php
         include "connection.php";
-        include "defaultnavbar.php";
         require_once 'paginator.class.php';
 
         $conn       = $connect;
@@ -38,11 +37,16 @@
 </head>
 <body>
 
-    <div class="container-fluid">
+    <div class="container-fluid fill-height">
+        <div class="row">
+            <?php
+                include "defaultnavbar.php";
+            ?>
+        </div>
 
         <div class="row">
             <div class="col-md-6">
-            <img src="img/logo-transparente.png" alt="Smiley face">
+            <img src="img/logo-transparente.png" alt="logounlp">
             </div>
 
             <div class="col-md-6">
@@ -65,58 +69,61 @@
             </div>
         </div>
 
-    <hr>
+        <hr/>
 
-    <div style="height: 600px; overflow: auto;">
-        <table class="table table-bordered">
-        <thead class="thead-dark">
-            <tr>
-            <th scope="col">Portada</th>
-            <th scope="col">Titulo</th>
-            <th scope="col">Autor</th>
-            <th scope="col">Ejemplares</th>
-            </tr>
-        </thead>
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-10" style="height: 600px; overflow: auto;">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                            <th scope="col">Portada</th>
+                            <th scope="col">Titulo</th>
+                            <th scope="col">Autor</th>
+                            <th scope="col">Ejemplares</th>
+                            </tr>
+                        </thead>
 
-    <?php
-                    for( $i = 0; $i < count( $results->data ); $i++ ) :
-                        $image_data = $results->data[$i]["contenidoimagen"];
-                        $encoded_image = base64_encode($image_data);
-                        //You dont need to decode it again.
+                        <tbody>
+                        <?php
+                                for( $i = 0; $i < count( $results->data ); $i++ ) :
+                                    $image_data = $results->data[$i]["contenidoimagen"];
+                                    $encoded_image = base64_encode($image_data);
+                                    $Hinh = "<img  src='data:image/" . $results->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
+                        ?>
+                            <tr>
+                            <th scope="row"><?php echo $Hinh ?></th>
+                            <td><a href="#"><?php echo $results->data[$i]["nombre"]; ?></a></td>
+                            <td><?php echo $results->data[$i]["sinopsis"]; ?></td>
+                            <td>@mdo</td>
+                            </tr>
+                        <?php
+                            endfor;
+                        ?>
+                        </tbody>
 
-                        $Hinh = "<img  src='data:image/" . $results->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
 
-                        //and you echo $Hinh
-
-
-
-    ?>
-
-        <tbody>
-            <tr>
-            <th scope="row"><?php echo $Hinh ?></th>
-            <td><a href="#"><?php echo $results->data[$i]["nombre"]; ?></a></td>
-            <td><?php echo $results->data[$i]["sinopsis"]; ?></td>
-            <td>@mdo</td>
-            </tr>
-        </tbody>
-    
-        <?php
-            endfor;
-        ?>
-
-        </table>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
+                    </table>
+            </div>
+            <div class="col-md-1">
+            </div>
         </div>
-        <div class="col-md-6">
-            <?php
-            echo $Paginator->createLinks( $links, 'pagination','indexpages' );
-            ?>
+
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+                    <?php
+                    echo $Paginator->createLinks( $links, 'pagination','indexpages' );
+                    ?>
+            </div>
+            <div class="col-md-4">
+            </div>
         </div>
     </div>
-
 </body>
 
 </html>
