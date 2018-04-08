@@ -12,7 +12,6 @@
     <link href="css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/shop-item.css" rel="stylesheet">
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
