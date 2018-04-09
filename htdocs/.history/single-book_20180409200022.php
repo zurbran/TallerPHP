@@ -69,15 +69,11 @@
             </div>
         </div>
         <div class=row>
-            <div class="col-md-12">
-                <div class=row>
-                    <p class="h6 texto-ficha">Descripcion: </p>
-                </div>
+            <div class="col-md-6">
+                <?php echo '<p class="h6 texto-ficha">Descripcion: </p>' ?>
             </div>
         </div>
-        <div class=row>
-            <?php echo "<p class='h7 texto-ficha'>" . $result['descripcion'] . "</p>" ?>
-        </div>
+
     </div>
 </body>
 

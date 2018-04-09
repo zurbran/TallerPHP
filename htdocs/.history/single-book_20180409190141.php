@@ -9,7 +9,6 @@
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
     <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/single-book.css" rel="stylesheet">
 
     <!-- Custom CSS -->
 
@@ -26,8 +25,9 @@
         $conn       = $connect;
         //if (isset( $_GET('book'))){
         //    echo "No se pudo conectar la Base de Datos";
-        //
-        $book = ( isset( $_GET['libro_id'] ) ) ? $_GET['libro_id'] : 1;
+        //}
+        $book = 1;
+         // $book = ( isset( $_GET['libro_id'] ) ) ? $_GET['libro_id'] : 1;
         $query_libro = "SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, l.descripcion, l.id FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.id = ". $book .";";
         $sth = $conn->query($query_libro);
         $result=mysqli_fetch_array($sth);
@@ -46,38 +46,20 @@
             <div class="col-md-6">
             <img src="img/logo-transparente.png" width='200' alt="logounlp">
             </div>
-            <hr/>
         </div>
         <div class=row>
             <div class="col-md-6">
-                <div class=row>
-                    <?php echo "<p class='h1 titulo-libro'>" . $result['titulo'] . "</p>" ?>
-                </div>
-                <div class=row>
-                    <?php echo "<p class='h5 texto-ficha'> Autor: " . $result['nombre'] . " " . $result['apellido'] . "</p>"?>
-                </div>
-                <div class=row>
-                    <?php echo "<p class='h6 texto-ficha'> Ejemplares: " . $result['cantidad'] . "</p>"?>   
-                </div>
+                <?php echo $result['titulo'] ?>
             </div>
-            <div class="col-md-3">
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
             <?php
-                echo '<img src="data:image/jpeg;base64,'.base64_encode( $result['portada'] ).'" width="200";/>';
+                echo '<img src="data:image/jpeg;base64,'.base64_encode( $result['portada'] ).'"/>';
             ?>
-            </div>
         </div>
-        <div class=row>
-            <div class="col-md-12">
-                <div class=row>
-                    <p class="h6 texto-ficha">Descripcion: </p>
-                </div>
-            </div>
-        </div>
-        <div class=row>
-            <?php echo "<p class='h7 texto-ficha'>" . $result['descripcion'] . "</p>" ?>
-        </div>
+
+    <hr/>
+
+
     </div>
 </body>
 

@@ -93,7 +93,7 @@
                         ?>
                             <tr>
                             <th scope="row"><?php echo $Hinh ?></th>
-                            <?php echo '<td><a href="/single-book.php?libro_id='.  $results->data[$i]["id"]  .'"> ' . $results->data[$i]["titulo"] .' </a></td> ';?> 
+                            <?php echo '<td><a href="/single-book.php/?libro_id='.  $results->data[$i]["id"]  .'"> ' . $results->data[$i]["titulo"] .' </a></td> ';?> 
                             <td><a href="#"><?php echo $results->data[$i]["nombre"] . " " . $results->data[$i]["apellido"]; ?></a></td>
                             <td><?php echo $results->data[$i]["cantidad"] ?></td>
                             </tr>

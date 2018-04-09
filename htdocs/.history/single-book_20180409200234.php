@@ -75,9 +75,7 @@
                 </div>
             </div>
         </div>
-        <div class=row>
-            <?php echo "<p class='h7 texto-ficha'>" . $result['descripcion'] . "</p>" ?>
-        </div>
+
     </div>
 </body>
 
