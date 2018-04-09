@@ -26,7 +26,7 @@
         $conn       = $connect;
 
         $links      = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 10;
-        $query      = "SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
+        $query      = "SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
         $Paginator  = new Paginator( $conn, $query );
 
@@ -93,7 +93,7 @@
                         ?>
                             <tr>
                             <th scope="row"><?php echo $Hinh ?></th>
-                            <td><a href="#"><?php echo $results->data[$i]["titulo"]; ?></a></td>
+                            <?php echo '<td><a href="/single-book.php/?libro_id='.  $results->data[$i]["id"]  .'"> ' . $results->data[$i]["titulo"] .' </a></td> ';?> 
                             <td><a href="#"><?php echo $results->data[$i]["nombre"] . " " . $results->data[$i]["apellido"]; ?></a></td>
                             <td><?php echo $results->data[$i]["cantidad"] ?></td>
                             </tr>
