@@ -2,8 +2,7 @@
 <html lang="es">
 
 <head>
-
-
+    <meta charset="UTF-8">
     <title>Biblioteca UNLP</title>
 
     <!-- Bootstrap Core CSS -->
@@ -27,14 +26,14 @@
         $conn       = $connect;
 
         $links      = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 10;
-        $query      = "SELECT p.nombre, p.sinopsis, p.anio, g.genero, p.contenidoimagen, p.tipoimagen FROM peliculas p INNER JOIN generos g ON (p.generos_id = g.id)";
+        $query      = "SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
         $Paginator  = new Paginator( $conn, $query );
 
         $results    = $Paginator->getData( $_GET['limit'] , $_GET['page']);
         ?>
 </head>
-<body>
+<body style="padding-top: 70px;">
 
     <div class="container-fluid fill-height">
         <div class="row">
@@ -87,15 +86,16 @@
                         <tbody>
                         <?php
                                 for( $i = 0; $i < count( $results->data ); $i++ ) :
-                                    $image_data = $results->data[$i]["contenidoimagen"];
+                                    $image_data = $results->data[$i]["portada"];
                                     $encoded_image = base64_encode($image_data);
-                                    $Hinh = "<img  src='data:image/" . $results->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
+                                    // $Hinh = "<img  src='data:image/" . $results->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
+                                    $Hinh = "<img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' />";
                         ?>
                             <tr>
                             <th scope="row"><?php echo $Hinh ?></th>
-                            <td><a href="#"><?php echo $results->data[$i]["nombre"]; ?></a></td>
-                            <td><?php echo $results->data[$i]["sinopsis"]; ?></td>
-                            <td>@mdo</td>
+                            <td><a href="#"><?php echo $results->data[$i]["titulo"]; ?></a></td>
+                            <td><a href="#"><?php echo $results->data[$i]["nombre"] . " " . $results->data[$i]["apellido"]; ?></a></td>
+                            <td><?php echo $results->data[$i]["cantidad"] ?></td>
                             </tr>
                         <?php
                             endfor;
