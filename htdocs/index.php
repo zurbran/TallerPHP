@@ -89,7 +89,7 @@
                                     $image_data = $results->data[$i]["portada"];
                                     $encoded_image = base64_encode($image_data);
                                     // $Hinh = "<img  src='data:image/" . $results->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
-                                    $Hinh = "<img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' />";
+                                    $Hinh = "<a href='/single-book.php/?libro_id=" . $results->data[$i]["id"] . "'><img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' /> </a>";
                         ?>
                             <tr>
                             <th scope="row"><?php echo $Hinh ?></th>
