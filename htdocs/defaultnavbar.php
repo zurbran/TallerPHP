@@ -1,5 +1,5 @@
 <nav class="navbar navbar-dark navbar-expand bg-dark fixed-top ">
-		<a class="navbar-brand" href="#">Biblioteca UNLP</a>
+		<a class="navbar-brand" href="/">Biblioteca UNLP</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#indexnavbar" aria-controls="indexnavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>

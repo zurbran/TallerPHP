@@ -9,9 +9,11 @@
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
     <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/single-book.css" rel="stylesheet">
 
     <!-- Custom CSS -->
+
+    <link href="css/single-book.css" rel="stylesheet">
+    <link href="css/media.css" rel="stylesheet">
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
@@ -33,7 +35,7 @@
         $result=mysqli_fetch_array($sth);
         ?>
 </head>
-<body style="padding-top: 70px;">
+<body>
 
     <div class="container-fluid fill-height">
         <div class="row">
@@ -43,21 +45,22 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6">
-            <img src="img/logo-transparente.png" width='200' alt="logounlp">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+            <img class="logo" src="img/logo-transparente.png" alt="logounlp">
             </div>
-            <hr/>
         </div>
+
+        <hr/>
         <div class=row>
             <div class="col-md-6">
                 <div class=row>
-                    <?php echo "<p class='h1 titulo-libro'>" . $result['titulo'] . "</p>" ?>
+                    <?php echo "<p class='h1 titulo-libro'>" . $result['titulo'] . "</p>"?>
                 </div>
                 <div class=row>
-                    <?php echo "<p class='h5 texto-ficha'> Autor: " . $result['nombre'] . " " . $result['apellido'] . "</p>"?>
+                    <?php echo "<p class='texto-ficha'> Autor: " . $result['nombre'] . " " . $result['apellido'] . "</p>"?>
                 </div>
                 <div class=row>
-                    <?php echo "<p class='h6 texto-ficha'> Ejemplares: " . $result['cantidad'] . "</p>"?>   
+                    <?php echo "<p class='texto-ficha'> Ejemplares: " . $result['cantidad'] . "</p>"?>   
                 </div>
             </div>
             <div class="col-md-3">
@@ -71,12 +74,12 @@
         <div class=row>
             <div class="col-md-12">
                 <div class=row>
-                    <p class="h6 texto-ficha">Descripcion: </p>
+                    <p class="p texto-ficha">Descripcion: </p>
                 </div>
             </div>
         </div>
         <div class=row>
-            <?php echo "<p class='h7 texto-ficha'>" . $result['descripcion'] . "</p>" ?>
+            <?php echo "<p class='sinopsis'>" . $result['descripcion'] . "</p>" ?>
         </div>
     </div>
 </body>

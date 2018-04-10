@@ -1,8 +1,26 @@
 .titulo-libro{
-    color:grey;
+    padding-top: 3vh;
+    padding-bottom: 5vh;
     text-indent: 3vh;
+    text-decoration: underline;
 }
 
 .texto-ficha{
     text-indent: 3vh;
+    font-size: 4vh;
+    vertical-align: bottom;
+    color: darkslategray;
+}
+
+.sinopsis{
+    font-style: italic;
+    padding-left: 3vh;
+    font-size: 3vh;
+    text-indent: 3vh;
+}
+
+body{
+    background-color: lightyellow;
+    padding-top: 70px;
+    padding-bottom: 10vh;
 }
