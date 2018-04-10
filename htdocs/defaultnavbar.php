@@ -37,7 +37,7 @@
 						</div>
 					</form>
 					<div class="bottom text-center">
-					¿No tiene usuario? <a href="#"><b>Registrarse</b></a>
+					¿No tiene usuario? <a href="/user-create.php"><b>Registrarse</b></a>
 					</div>
 				</div>
 			</div>

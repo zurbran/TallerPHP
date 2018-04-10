@@ -8,6 +8,7 @@
         <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
         <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/user-create.css" rel="stylesheet">
 
         <!-- Custom CSS -->
 
@@ -46,7 +47,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-8 col-md-12">
-                    <form role="form">
+                    <form id="signup" onSubmit="return validateForm()">
                         <h2> Registresé <small> Al portal de libros UNLP.</small></h2>
                         <hr class="colorgraph">
                         <div class="row">
@@ -55,21 +56,32 @@
                                     <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="Nombre" tabindex="1">
                                 </div>
                             </div>
+                            <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertname" role="alert" style="display:none;">
+                                Nombre Invalido
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6">
                                 <div class="form-group">
                                     <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Apellido" tabindex="2">
                                 </div>
                             </div>
+                                <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger" id="alertlastname" role="alert" style="display:none;">
+                                    Apellido Invalido
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-xs-6 col-sm-3 col-md-3">
+                                <input type="text" name="display_name" id="display_name" class="form-control input-lg" placeholder="Foto de Perfil" tabindex="3">
+                            </div>
+                            <div class="col-xs-6 col-sm-3 col-md-3"><a href="#" class="btn btn-success btn-block btn-md">Examinar</a></div>
                         </div>
                         <div class="row">
                             <div class="form-group col-xs-12 col-sm-6 col-md-6">
-                                <input type="text" name="display_name" id="display_name" class="form-control input-lg" placeholder="Foto de Perfil" tabindex="3">
+                                <input type="email" name="email" id="emailbox" class="form-control input-lg" placeholder="Email" tabindex="4">
                             </div>
-                            <div class="col-xs-12 col-md-6"><a href="#" class="btn btn-success btn-block btn-md">Examinar</a></div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-xs-24 col-sm-12 col-md-12">
-                                <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email" tabindex="4">
+                            <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertemail" role="alert" style="display:none;">
+                                Email Invalido
                             </div>
                         </div>
                         <div class="row">
@@ -78,6 +90,8 @@
                                     <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Contraseña" tabindex="5">
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6">
                                 <div class="form-group">
                                     <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirmar Contraseña" tabindex="6">
@@ -86,7 +100,9 @@
                         </div>
                         <hr class="colorgraph">
                         <div class="row">
-                            <div class="col-xs-12 col-md-12"><input type="submit" value="Registrar" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
+                            <div class="col-xs-12 col-md-12">
+                                <btn id="submitbtn" class="btn btn-primary btn-block" onclick="validate()" tabindex="7">Registrar</btn>
+                            </div>
                         </div>
                     </form>
                 </div>

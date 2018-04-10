@@ -43,11 +43,11 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-xs-12 col-sm-6 col-md-6">
             <img src="img/logo-transparente.png" alt="logounlp">
             </div>
 
-            <div class="col-md-6">
+            <div class="col-xs-12 col-sm-6 col-md-6">
                 <form>
                     <fieldset>
                     <legend>Refinar Búsqueda:</legend>
@@ -72,7 +72,7 @@
         <div class="row">
             <div class="col-md-1">
             </div>
-            <div class="col-md-10" style="height: 600px; overflow: auto;">
+            <div class="col-xs-16 col-sm-10 col-md-10" style="height: 600px; overflow: auto;">
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
