@@ -31,12 +31,12 @@
         $author = ( isset( $_GET['author_id'] ) ) ? $_GET['author_id'] : 1;
         $query_author = "SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id =" . $author . ";" ;
 
-        //$Paginator  = new Paginator( $conn, $query_author );
+        $writerPaginator  = new Paginator( $conn, $query_author );
 
-        $sth = $conn->query($query_author);
-        $results=mysqli_fetch_array($sth);
+        //$sth = $conn->query($query_author);
+        //$pageResults=mysqli_fetch_array($sth);
 
-        //$Paginator->getData( $_GET['limit'] , $_GET['page']);
+        $pageResults = $writerPaginator->getData( $_GET['limit'] , $_GET['page']);
         ?>
 </head>
 <body style="padding-top: 70px;">
@@ -57,7 +57,7 @@
         <hr/>
 
         <div class="row">
-            <?php echo "<p class='h1 titulo-libro'> Libros de " . $results['nombre'] . " " . $results['apellido'] . "</p>"?>
+            <?php echo "<p class='h1 titulo-libro'> Libros de " . $pageResults['nombre'] . " " . $pageResults['apellido'] . "</p>"?>
         </div>
 
         <div class="row">
@@ -75,17 +75,17 @@
 
                         <tbody>
                         <?php
-                                for( $i = 0; $i < count( $results->data ); $i++ ) :
-                                    $image_data = $results->data[$i]["portada"];
+                                for( $i = 0; $i < count( $pageResults->data ); $i++ ) :
+                                    $image_data = $pageResults->data[$i]["portada"];
                                     $encoded_image = base64_encode($image_data);
-                                    // $Hinh = "<img  src='data:image/" . $results->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
-                                    $Hinh = "<a href='/single-book.php?libro_id=" . $results->data[$i]["id"] . "'><img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' /> </a>";
+                                    // $Hinh = "<img  src='data:image/" . $pageResults->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
+                                    $Hinh = "<a href='/single-book.php?libro_id=" . $pageResults->data[$i]["id"] . "'><img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' /> </a>";
                         ?>
                             <tr>
                             <th scope="row"><?php echo $Hinh ?></th>
-                            <?php echo '<td><a href="/single-book.php?libro_id='.  $results->data[$i]["id"]  .'"> ' . $results->data[$i]["titulo"] .' </a></td> ';?> 
-                            <td><a href="#"><?php echo $results->data[$i]["nombre"] . " " . $results->data[$i]["apellido"]; ?></a></td>
-                            <td><?php echo $results->data[$i]["cantidad"] ?></td>
+                            <?php echo '<td><a href="/single-book.php?libro_id='.  $pageResults->data[$i]["id"]  .'"> ' . $pageResults->data[$i]["titulo"] .' </a></td> ';?> 
+                            <td><a href="#"><?php echo $pageResults->data[$i]["nombre"] . " " . $pageResults->data[$i]["apellido"]; ?></a></td>
+                            <td><?php echo $pageResults->data[$i]["cantidad"] ?></td>
                             </tr>
                         <?php
                             endfor;
