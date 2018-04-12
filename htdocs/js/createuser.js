@@ -1,3 +1,9 @@
+function showFileName()
+{
+   var pictureFile = document.getElementById('userpic');
+  document.getElementById('picturename').value = pictureFile.files[0].name;
+}
+
 
 function validateEmailField (value){
     validregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
