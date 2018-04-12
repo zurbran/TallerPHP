@@ -74,10 +74,12 @@
                             <div class="form-group col-xs-6 col-sm-3 col-md-3">
                                 <input type="text" name="picturename" id="picturename" class="form-control input-lg" placeholder="Foto de Perfil" tabindex="3">
                             </div>
-                            <input type="file" id="userpic" name="files" onchange="showFileName()" style="display: none;" />
-                            <label for="userpic" class="btn btn-success btn-block btn-md col-xs-6 col-sm-3 col-md-3 h-75" id="picturelabel">
-                                Examinar
-                            </label>
+                            <div class="col-xs-6 col-sm-3 col-md-3">
+                                <input type="file" id="userpic" name="files" onchange="showFileName()" style="display: none;" />
+                                <label for="userpic" class="btn btn-success btn-block btn-md" id="picturelabel">
+                                    Examinar
+                                </label>
+                            </div>
                             <!-- <div class="col-xs-6 col-sm-3 col-md-3"><a href="#" class="btn btn-success btn-block btn-md">Examinar</a></div> -->
                         </div>
                         <div class="row">
