@@ -90,6 +90,9 @@
                                     <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Contraseña" tabindex="5">
                                 </div>
                             </div>
+                            <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertpass" role="alert" style="display:none;">
+                                Las contraseñas no coinciden
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6">

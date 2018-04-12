@@ -48,4 +48,25 @@ function validate(){
     {
         $('#alertemail').show();
     }
+    
+    var pass = document.getElementById('password').value;
+    var passconf = document.getElementById('password_confirmation').value;
+
+    if(pass != passconf)
+    {
+        $('#alertpass').text("Las contraseñas no coinciden");
+        $('#alertpass').show();
+    }
+    else
+    {
+        if((pass === "")||(passconf === "")||(pass === null)||(passconf === null))
+        {
+            $('#alertpass').text("Falta completar campo de contraseña");
+            $('#alertpass').show();
+        }
+        else
+        {
+            $('#alertpass').hide();
+        }
+    }
 }
