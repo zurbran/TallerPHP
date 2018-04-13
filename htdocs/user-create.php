@@ -47,7 +47,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-8 col-md-12">
-                    <form id="signup" onSubmit="return validateForm()">
+                    <form id="signup" action="user-dbcreate.php" method="post" enctype="multipart/form-data">
                         <h2> Registresé <small> Al portal de libros UNLP.</small></h2>
                         <hr class="colorgraph">
                         <div class="row">
@@ -75,16 +75,19 @@
                                 <input type="text" name="picturename" id="picturename" class="form-control input-lg" placeholder="Foto de Perfil" tabindex="3">
                             </div>
                             <div class="col-xs-6 col-sm-3 col-md-3">
-                                <input type="file" id="userpic" name="files" onchange="showFileName()" style="display: none;" />
+                                <input type="file" id="userpic" name="userpic" onchange="showFileName()" style="display: none;" />
                                 <label for="userpic" class="btn btn-success btn-block btn-md" id="picturelabel">
                                     Examinar
                                 </label>
+                            </div>
+                            <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertpic" role="alert" style="display:none;">
+                                Falta subir una foto de perfil
                             </div>
                             <!-- <div class="col-xs-6 col-sm-3 col-md-3"><a href="#" class="btn btn-success btn-block btn-md">Examinar</a></div> -->
                         </div>
                         <div class="row">
                             <div class="form-group col-xs-12 col-sm-6 col-md-6">
-                                <input type="email" name="email" id="emailbox" class="form-control input-lg" placeholder="Email" tabindex="4">
+                                <input type="email" name="emailbox" id="emailbox" class="form-control input-lg" placeholder="Email" tabindex="4">
                             </div>
                             <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertemail" role="alert" style="display:none;">
                                 Email Invalido
@@ -113,6 +116,7 @@
                                 <btn id="submitbtn" class="btn btn-primary btn-block" onclick="validate()" tabindex="7">Registrar</btn>
                             </div>
                         </div>
+                        <input type="submit" value="submit">
                     </form>
                 </div>
             </div>

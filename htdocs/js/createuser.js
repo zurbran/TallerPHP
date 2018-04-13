@@ -1,7 +1,10 @@
+var pictureFile = null;
+
 function showFileName()
 {
-   var pictureFile = document.getElementById('userpic');
-  document.getElementById('picturename').value = pictureFile.files[0].name;
+    pictureFile = document.getElementById('userpic');
+    document.getElementById('picturename').value = pictureFile.files[0].name;
+    $('#alertpic').hide();
 }
 
 
@@ -9,70 +12,94 @@ function validateEmailField (value){
     validregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if(validregex.test(value) == true)
     {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-function validateAlphabeticField (value){
-    validregex = /^[a-z]+$/i;
-    if(validregex.test(value) == true)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-function validate(){
-    if(validateAlphabeticField(document.getElementById('first_name').value))
-    {
-        $('#alertname').hide();
-    }
-    else
-    {
-        $('#alertname').show();
-    }
-    if(validateAlphabeticField(document.getElementById('last_name').value))
-    {
-        $('#alertlastname').hide();
-    }
-    else
-    {
-        $('#alertlastname').show();
-    }
-    if(validateEmailField(document.getElementById('emailbox').value))
-    {
         $('#alertemail').hide();
+        return 1;
     }
     else
     {
         $('#alertemail').show();
+        return 0;
     }
-    
+}
+
+function validateNameField (value){
+    validregex = /^[a-z]+$/i;
+    if(validregex.test(value) == true)
+    {
+        $('#alertname').hide();
+        return 1;
+    }
+    else
+    {
+        $('#alertname').show();
+        return 0;
+    }
+}
+
+function validateSurnameField (value){
+    validregex = /^[a-z]+$/i;
+    if(validregex.test(value) == true)
+    {
+        $('#alertlastname').hide();
+        return 1;
+    }
+    else
+    {
+        $('#alertlastname').show();
+        return 0;
+    }
+}
+
+function validatePasswordField (){
     var pass = document.getElementById('password').value;
     var passconf = document.getElementById('password_confirmation').value;
 
-    if(pass != passconf)
+    if((pass === "")|(passconf === "")|(pass === null)|(passconf === null))
     {
-        $('#alertpass').text("Las contraseñas no coinciden");
+        $('#alertpass').text("Falta completar campo de contraseña");
         $('#alertpass').show();
     }
     else
     {
-        if((pass === "")||(passconf === "")||(pass === null)||(passconf === null))
+        if(pass != passconf)
         {
-            $('#alertpass').text("Falta completar campo de contraseña");
+            $('#alertpass').text("Las contraseñas no coinciden");
             $('#alertpass').show();
+            return 0;
         }
         else
         {
-            $('#alertpass').hide();
+            var passlength = pass.length;
+            if(passlength >= 8)
+            {
+                $('#alertpass').hide();
+                return 1;
+            }
+            else
+            {
+                $('#alertpass').text("La contraseña contiene menos de 8 caracteres");
+                $('#alertpass').show();
+                return 0;
+            }
+        }  
+    }
+}
+
+function validate(){
+
+    if((validateEmailField(document.getElementById('emailbox').value))&(validateNameField(document.getElementById('first_name').value))&((validateSurnameField(document.getElementById('last_name').value)))&(validatePasswordField())&(pictureFile != null))
+    {
+        postForm();
+    }
+    else
+    {
+        if(pictureFile == null)
+        {
+            $('#alertpic').show();
         }
     }
 }
+function postForm() {
+    document.getElementById('signup').submit();
+}
+

@@ -96,7 +96,7 @@
                             <tr>
                             <th scope="row"><?php echo $Hinh ?></th>
                             <?php echo '<td><a href="/single-book.php?libro_id='.  $results->data[$i]["id"]  .'"> ' . $results->data[$i]["titulo"] .' </a></td> ';?> 
-                            <?php echo '<td><a href="/show-writers.php?author_id='. $results->data[$i]["autores_id"] .'"> ' . $results->data[$i]["nombre"] . " " . $results->data[$i]["apellido"] . '</a></td>';?>
+                            <?php echo '<td><a href="/show-writers.php?author_id='. $results->data[$i]["autores_id"] .'&limit=5&page=1"> ' . $results->data[$i]["nombre"] . " " . $results->data[$i]["apellido"] . '</a></td>';?>
                             <td><?php echo $results->data[$i]["cantidad"] ?></td>
                             </tr>
                         <?php
