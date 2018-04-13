@@ -4,7 +4,7 @@ include "connection.php";
 if(isset($_POST['first_name']))
 {
     $firstname = $_POST['first_name'];
-    if(filter_var($lastname,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/[a-zA-Z\s]+/"))))
+    if(filter_var($firstname,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/[a-zA-Z\s]+/"))))
     {
         $validfirstname = true;
     }
@@ -44,41 +44,62 @@ if(isset($_POST['password'])&isset($_POST['password_confirmation']))
 {
     $pass = $_POST['password'];
     $passconf = $_POST['password_confirmation'];
+    if(filter_var($pass,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/.{8}+/"))))
+    {
+        if(filter_var($passconf,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/.{8}+/"))))
+        {
+            if(!strcmp($pass,$passconf))
+            {
+                $validpass = true;
+            }
+            else
+            {
+                $validpass = false;
+            }
+
+        }
+        else
+        {
+            $validpass = false;
+        }
+    }
+    else
+    {
+        $validpass = false;
+    }
     
 }
 
-// $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-// // Check if image file is a actual image or fake image
-// if(isset($_POST["submit"])) {
-//     $check = getimagesize($_FILES["userpic"]["tmp_name"]);
-//     if($check !== false) {
-//         echo "File is an image - " . $check["mime"] . ".";
-//         $uploadOk = 1;
-//     } else {
-//         echo "File is not an image.";
-//         $uploadOk = 0;
-//     }
-// }
+$imageFileType = strtolower(pathinfo($_FILES["userpic"]["tmp_name"],PATHINFO_EXTENSION));
+// Check if image file is a actual image or fake image
+if(isset($_POST["submit"])) {
+    $check = getimagesize($_FILES["userpic"]["tmp_name"]);
+    if($check !== false) {
+        $uploadOk = 1;
+    } else {
+        $uploadOk = 0;
+    }
+}
 
-// // Check file size
-// if ($_FILES["userpic"]["size"] > 5000000) {
-//     echo "Archivo de imagen excede el limite de 5MB";
-//     $uploadOk = 0;
-// }
-// // Allow certain file formats
-// if($imageFileType != "jpg" && $imageFileType != "jpeg") 
-// {
-//     echo "Perdon, solo se permiten archivos de imagen con extensión JPG y JPEG.";
-//     $uploadOk = 0;
-// }
-// // Check if $uploadOk is set to 0 by an error
-// if ($uploadOk == 0) 
-// {
-//     echo "Sorry, your file was not uploaded.";
-// // if everything is ok, try to upload file
-// } 
-// else 
-// {
-//     $sqluserupload = "INSERT INTO usuarios (id, email, nombre, apellido, foto, clave, rol) VALUES ('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway','LECTOR');";
-// }
+// Check file size
+if ($_FILES["userpic"]["size"] > 5000000) {
+    echo "Archivo de imagen excede el limite de 5MB";
+    $uploadOk = 0;
+}
+// Allow certain file formats
+if($imageFileType != "jpg" && $imageFileType != "jpeg") 
+{
+    echo "Perdon, solo se permiten archivos de imagen con extensión JPG y JPEG.";
+    $uploadOk = 0;
+}
+// Check if $uploadOk is set to 0 by an error
+if (($uploadOk == 0)|(!$validpass)|(!$validemail)|(!$validfirstname)|(!$validlastname))
+{
+    echo "Alguno de los campos son incorrectors";
+    // if everything is ok, try to upload file
+} 
+else 
+{
+    $sqluserupload = "INSERT INTO usuarios (id, email, nombre, apellido, foto, clave, rol) VALUES ('id', '".$email."', '".$nombre."', '" .$apellido."', '" . mysql_escape_string(file_get_contents($_FILES["userpic"]["tmp_name"])) . "', '" . $pass ."','LECTOR');";
+}
 ?>
