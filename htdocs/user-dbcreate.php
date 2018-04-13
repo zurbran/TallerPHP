@@ -70,29 +70,35 @@ if(isset($_POST['password'])&isset($_POST['password_confirmation']))
     
 }
 
-$imageFileType = strtolower(pathinfo($_FILES["userpic"]["tmp_name"],PATHINFO_EXTENSION));
-// Check if image file is a actual image or fake image
-if(isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["userpic"]["tmp_name"]);
-    if($check !== false) {
-        $uploadOk = 1;
-    } else {
+
+if(isset($_POST['picturename']))
+{
+    $imageFileType = strtolower(pathinfo($_FILES["userpic"]["name"],PATHINFO_EXTENSION));
+    echo var_dump($imageFileType);
+    // Check if image file is a actual image or fake image
+    if(isset($_POST["submit"])) {
+        $check = getimagesize($_FILES["userpic"]["tmp_name"]);
+        if($check !== false) {
+            $uploadOk = 1;
+        } else {
+            $uploadOk = 0;
+        }
+    }
+    
+    // Check file size
+    if ($_FILES["userpic"]["size"] > 5000000) {
+        echo "Archivo de imagen excede el limite de 5MB";
         $uploadOk = 0;
     }
+    // Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "jpeg") 
+    {
+        echo "Perdon, solo se permiten archivos de imagen con extensión JPG y JPEG.";
+        $uploadOk = 0;
+    }  
 }
 
-// Check file size
-if ($_FILES["userpic"]["size"] > 5000000) {
-    echo "Archivo de imagen excede el limite de 5MB";
-    $uploadOk = 0;
-}
-// Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "jpeg") 
-{
-    echo "Perdon, solo se permiten archivos de imagen con extensión JPG y JPEG.";
-    $uploadOk = 0;
-}
-// Check if $uploadOk is set to 0 by an error
+
 if (($uploadOk == 0)|(!$validpass)|(!$validemail)|(!$validfirstname)|(!$validlastname))
 {
     echo "Alguno de los campos son incorrectors";
