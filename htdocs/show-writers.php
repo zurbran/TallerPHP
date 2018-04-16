@@ -23,20 +23,18 @@
     <script src="js/bootstrap.js"></script>
 
         <?php
-        include "connection.php";
+        include "pdo-connect.php";
         require_once 'paginator.class.php';
 
-        $conn = $connect;
+        $stmt= $pdo->prepare('SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id = :author');
+        $stmt->execute([':author' => $_GET['author_id']]);
 
-        $author = ( isset( $_GET['author_id'] ) ) ? $_GET['author_id'] : 1;
-        $query_author = "SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id =" . $author;
+        $data= $stmt->fetchAll();
+        $stmt= null;
 
-        $writerPaginator  = new Paginator( $conn, $query_author );
-
-        //$sth = $conn->query($query_author);
-        //$writerBooks=mysqli_fetch_array($sth);
-
-        $writerBooks = $writerPaginator->getData( $_GET['limit'] , $_GET['page']);
+        //$writerPaginator  = new Paginator( $pdo );
+        //$writerBooks = $writerPaginator->getData( $_GET['limit'] , $_GET['page']);
+        
         ?>
 </head>
 <body style="padding-top: 70px;">
@@ -57,7 +55,7 @@
         <hr/>
 
         <div class="row">
-            <?php echo "<p class='h1 titulo-libro'> Libros de " . $writerBooks->data[0]['nombre'] . " " . $writerBooks->data[0]['apellido'] . "</p>"?>
+            <?php echo "<p class='h1 titulo-libro'> Libros de " . $data[0]['nombre'] . " " . $data[0]['apellido'] . "</p>"?>
         </div>
 
         <div class="row">
@@ -75,16 +73,15 @@
 
                         <tbody>
                         <?php
-                                for( $i = 0; $i < count( $writerBooks->data ); $i++ ) :
-                                    $image_data = $writerBooks->data[$i]["portada"];
+                                for( $i = 0; $i < count( $data ); $i++ ) :
+                                    $image_data = $data[$i]["portada"];
                                     $encoded_image = base64_encode($image_data);
-                                    // $Hinh = "<img  src='data:image/" . $writerBooks->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
-                                    $Hinh = "<a href='/single-book.php?libro_id=" . $writerBooks->data[$i]["id"] . "'><img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' /> </a>";
+                                    $Hinh = "<a href='/single-book.php?libro_id=" . $data[$i]["id"] . "'><img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' /> </a>";
                         ?>
                             <tr>
                             <th scope="row"><?php echo $Hinh ?></th>
-                            <?php echo '<td><a href="/single-book.php?libro_id='.  $writerBooks->data[$i]["id"]  .'"> ' . $writerBooks->data[$i]["titulo"] .' </a></td> ';?> 
-                            <td><?php echo $writerBooks->data[$i]["cantidad"] ?></td>
+                            <?php echo '<td><a href="/single-book.php?libro_id='.  $data[$i]["id"]  .'"> ' . $data[$i]["titulo"] .' </a></td> ';?> 
+                            <td><?php echo $data[$i]["cantidad"] ?></td>
                             </tr>
                         <?php
                             endfor;
@@ -105,7 +102,7 @@
             </div>
             <div class="col-md-3">
                    <?php
-            //        echo $Paginator->createLinks( $links, 'pagination','indexpages' );
+            //        echo $writerPaginator->createLinks( $links, 'pagination','indexpages' );
                    ?>
             </div>
             <div class="col-md-4">

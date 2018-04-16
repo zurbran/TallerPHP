@@ -23,16 +23,14 @@
     <script src="js/bootstrap.js"></script>
 
         <?php
-        include "connection.php";
-        
-        $conn       = $connect;
-        //if (isset( $_GET('book'))){
-        //    echo "No se pudo conectar la Base de Datos";
-        //
-        $book = ( isset( $_GET['libro_id'] ) ) ? $_GET['libro_id'] : 1;
-        $query_libro = "SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, l.descripcion, l.id FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.id = ". $book .";";
-        $sth = $conn->query($query_libro);
-        $result=mysqli_fetch_array($sth);
+        include "pdo-connect.php";
+
+        $stmt= $pdo->prepare('SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, l.descripcion, l.id FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.id = :book');
+        $stmt->execute([':book' => $_GET['libro_id']]);
+
+        $result= $stmt->fetchAll();
+
+        $stmt= null;
         ?>
 </head>
 <body>
@@ -54,20 +52,20 @@
         <div class=row>
             <div class="col-md-6">
                 <div class=row>
-                    <?php echo "<p class='h1 titulo-libro'>" . $result['titulo'] . "</p>"?>
+                    <?php echo "<p class='h1 titulo-libro'>" . $result[0]['titulo'] . "</p>"?>
                 </div>
                 <div class=row>
-                    <?php echo "<p class='texto-ficha'> Autor: " . $result['nombre'] . " " . $result['apellido'] . "</p>"?>
+                    <?php echo "<p class='texto-ficha'> Autor: " . $result[0]['nombre'] . " " . $result[0]['apellido'] . "</p>"?>
                 </div>
                 <div class=row>
-                    <?php echo "<p class='texto-ficha'> Ejemplares: " . $result['cantidad'] . "</p>"?>   
+                    <?php echo "<p class='texto-ficha'> Ejemplares: " . $result[0]['cantidad'] . "</p>"?>   
                 </div>
             </div>
             <div class="col-md-3">
             </div>
             <div class="col-md-3">
             <?php
-                echo '<img src="data:image/jpeg;base64,'.base64_encode( $result['portada'] ).'" width="200";/>';
+                echo '<img src="data:image/jpeg;base64,'.base64_encode( $result[0]['portada'] ).'" width="200";/>';
             ?>
             </div>
         </div>
@@ -79,7 +77,7 @@
             </div>
         </div>
         <div class=row>
-            <?php echo "<p class='sinopsis'>" . $result['descripcion'] . "</p>" ?>
+            <?php echo "<p class='sinopsis'>" . $result[0]['descripcion'] . "</p>" ?>
         </div>
     </div>
 </body>

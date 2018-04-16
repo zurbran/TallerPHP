@@ -48,7 +48,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-8 col-md-12">
                     <form id="signup" action="user-dbcreate.php" method="post" enctype="multipart/form-data">
-                        <h2> Registresé <small> Al portal de libros UNLP.</small></h2>
+                        <h2> Registrese <small> al portal de libros UNLP.</small></h2>
                         <hr class="colorgraph">
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertname" role="alert" style="display:none;">
-                                Nombre Invalido
+                                Nombre Inválido
                             </div>
                         </div>
                         <div class="row">
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                                 <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger" id="alertlastname" role="alert" style="display:none;">
-                                    Apellido Invalido
+                                    Apellido Inválido
                                 </div>
                         </div>
                         <div class="row">
@@ -90,7 +90,7 @@
                                 <input type="email" name="emailbox" id="emailbox" class="form-control input-lg" placeholder="Email" tabindex="4">
                             </div>
                             <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertemail" role="alert" style="display:none;">
-                                Email Invalido
+                                Email Inválido
                             </div>
                         </div>
                         <div class="row">
