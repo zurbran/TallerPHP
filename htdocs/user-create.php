@@ -116,7 +116,7 @@
                                 <btn id="submitbtn" class="btn btn-primary btn-block" onclick="validate()" tabindex="7">Registrar</btn>
                             </div>
                         </div>
-                        <input type="submit" value="submit">
+                        <input type="submit" value="Register" name="register" class="btn btn-block btn-primary" />
                     </form>
                 </div>
             </div>

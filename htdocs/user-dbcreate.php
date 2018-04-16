@@ -1,42 +1,56 @@
 <?php
 include "connection.php";
 
+$uploadOk = 0;
+
 if(isset($_POST['first_name']))
 {
-    $firstname = $_POST['first_name'];
-    if(filter_var($firstname,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/[a-zA-Z\s]+/"))))
+    $nombre = $_POST['first_name'];
+    if(filter_var($nombre,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/[a-zA-Z\s]+/"))))
     {
         $validfirstname = true;
+        echo "Nombre correcto";
+        echo "<br>";
     }
     else
     {
         $validfirstname = false;
+        echo "Nombre incorrecto";
+        echo "<br>";
     }
 }
 
 if(isset($_POST['last_name']))
 {
-    $lastname = $_POST['last_name'];
-    if(filter_var($lastname,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/[a-zA-Z\s]+/"))))
+    $apellido = $_POST['last_name'];
+    if(filter_var($apellido,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/[a-zA-Z\s]+/"))))
     {
         $validlastname = true;
+        echo "Apellido correcto";
+        echo "<br>";
     }
     else
     {
         $validlastname = false;
+        echo "Apellido incorrecto";
+        echo "<br>";
     }
 }
 
 if(isset($_POST['emailbox']))
 {
     $email = $_POST['emailbox'];
-    if(filter_var($lastname,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>'/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD'))))
+    if(filter_var($email,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>'/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD'))))
     {
         $validemail = true;
+        echo "Email correcto";
+        echo "<br>";
     }
     else
     {
         $validemail = false;
+        echo "Email incorrecto";
+        echo "<br>";
     }
 }
 
@@ -51,10 +65,14 @@ if(isset($_POST['password'])&isset($_POST['password_confirmation']))
             if(!strcmp($pass,$passconf))
             {
                 $validpass = true;
+                echo "Password correcto";
+                echo "<br>";
             }
             else
             {
                 $validpass = false;
+                echo "Password incorrecto";
+                echo "<br>";
             }
 
         }
@@ -73,27 +91,41 @@ if(isset($_POST['password'])&isset($_POST['password_confirmation']))
 
 if(isset($_POST['picturename']))
 {
-    $imageFileType = strtolower(pathinfo($_FILES["userpic"]["name"],PATHINFO_EXTENSION));
-    echo var_dump($imageFileType);
     // Check if image file is a actual image or fake image
-    if(isset($_POST["submit"])) {
+    if(1) {//isset($_POST['submit'])
         $check = getimagesize($_FILES["userpic"]["tmp_name"]);
-        if($check !== false) {
+        echo "Tipo de imagen: ";
+        echo $check['mime'];
+        echo "<br>";
+        echo "Tamaño imagen: ";
+        echo $check[3];
+        echo "<br>";
+        if($check != false) {
             $uploadOk = 1;
+            echo "Foto correcta";
+            echo "<br>";
         } else {
             $uploadOk = 0;
+            echo "Foto incorrecta";
+            echo "<br>";
         }
+    } else {
+        echo "El submit no se encuentra.";
+        echo "<br>";
     }
+
     
     // Check file size
     if ($_FILES["userpic"]["size"] > 5000000) {
-        echo "Archivo de imagen excede el limite de 5MB";
+        echo "Archivo de imagen excede el limite de 5MB.";
+        echo "<br>";
         $uploadOk = 0;
     }
     // Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "jpeg") 
+    if($check['mime'] != "image/jpg" && $check['mime'] != "image/jpeg") 
     {
         echo "Perdon, solo se permiten archivos de imagen con extensión JPG y JPEG.";
+        echo "<br>";
         $uploadOk = 0;
     }  
 }
@@ -101,11 +133,18 @@ if(isset($_POST['picturename']))
 
 if (($uploadOk == 0)|(!$validpass)|(!$validemail)|(!$validfirstname)|(!$validlastname))
 {
-    echo "Alguno de los campos son incorrectors";
+    echo "Alguno de los campos son incorrectos...";
+    echo "<br>";
     // if everything is ok, try to upload file
 } 
 else 
 {
-    $sqluserupload = "INSERT INTO usuarios (id, email, nombre, apellido, foto, clave, rol) VALUES ('id', '".$email."', '".$nombre."', '" .$apellido."', '" . mysql_escape_string(file_get_contents($_FILES["userpic"]["tmp_name"])) . "', '" . $pass ."','LECTOR');";
+    $sql = "INSERT INTO usuarios (email, nombre, apellido, foto, clave, rol) VALUES ( '".$email."', '".$nombre."', '" .$apellido."', '" . $_FILES["userpic"]["tmp_name"] . "', '" . $pass ."','LECTOR');";
+  
+    if ($connect->query($sql) === true)
+    {
+        echo "User creado!";
+        echo "<br>";
+    }
 }
 ?>
