@@ -1,5 +1,5 @@
 <?php
-include "connection.php";
+require_once("pdo-connect.php");
 
 $uploadOk = 0;
 
@@ -139,12 +139,15 @@ if (($uploadOk == 0)|(!$validpass)|(!$validemail)|(!$validfirstname)|(!$validlas
 } 
 else 
 {
-    $sql = "INSERT INTO usuarios (email, nombre, apellido, foto, clave, rol) VALUES ( '".$email."', '".$nombre."', '" .$apellido."', '" . $_FILES["userpic"]["tmp_name"] . "', '" . $pass ."','LECTOR');";
-  
-    if ($connect->query($sql) === true)
-    {
-        echo "User creado!";
-        echo "<br>";
-    }
+    $picturefile = fopen($_FILES["userpic"]["tmp_name"],'rb');
+    $stmt = $pdo->prepare('INSERT INTO usuarios (email, nombre, apellido, foto, clave, rol) VALUES (:email, :first_name, :last_name, :picture, :pass, :rol)');
+    $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+    $stmt->bindValue(':first_name', $nombre, PDO::PARAM_STR);
+    $stmt->bindValue(':last_name', $apellido, PDO::PARAM_STR);
+    $stmt->bindValue(':picture', $picturefile, PDO::PARAM_LOB);
+    $stmt->bindValue(':pass', $pass, PDO::PARAM_STR);
+    $stmt->bindValue(':rol', 'LECTOR' , PDO::PARAM_STR);
+    $stmt->execute();
+    $pdo->lastInsertId();
 }
 ?>
