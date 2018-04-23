@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
     <meta charset="UTF-8">
     <title>Biblioteca UNLP</title>
@@ -23,7 +23,7 @@
     <script src="js/bootstrap.js"></script>
 
         <?php
-        include "pdo-connect.php";
+        require_once "pdo-connect.php";
 
         $stmt= $pdo->prepare('SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, l.descripcion, l.id FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.id = :book');
         $stmt->execute([':book' => $_GET['libro_id']]);

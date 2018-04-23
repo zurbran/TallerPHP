@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
     <meta charset="UTF-8">
     <title>Biblioteca UNLP</title>
@@ -10,10 +10,6 @@
 
     <link href="css/bootstrap.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
-
-    <link href="css/media.css" rel="stylesheet">
-
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
 
@@ -22,15 +18,14 @@
     <script src="js/bootstrap.js"></script>
 
         <?php
-        include "connection.php";
+        require_once "pdo-connect.php";
         require_once 'paginator.class.php';
-
-        $conn       = $connect;
 
         $links      = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 10;
         $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
-        $Paginator  = new Paginator( $conn, $query );
+        $pdoconn = $pdo;
+        $Paginator  = new Paginator( $pdoconn, $query );
 
         $results    = $Paginator->getData( $_GET['limit'] , $_GET['page']);
         ?>

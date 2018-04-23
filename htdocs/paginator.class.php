@@ -1,8 +1,11 @@
 <?php
  
+ require_once "pdo-connect.php";
+
 class Paginator {
  
      private $_conn;
+     private $_statement;
         private $_limit;
         private $_page;
         private $_query;
@@ -13,9 +16,10 @@ public function __construct( $conn, $query ) {
      
     $this->_conn = $conn;
     $this->_query = $query;
- 
-    $rs= $this->_conn->query( $this->_query );
-    $this->_total = $rs->num_rows;
+    $this->_statement = $this->_conn->prepare($query);
+    $this->_statement->execute();
+
+    $this->_total = $this->_statement->rowCount();
      
 }
 
@@ -27,10 +31,14 @@ public function getData( $limit, $page) {
     if ( $this->_limit == 'all' ) {
         $query      = $this->_query;
     } else {
-        $query      = $this->_query . " LIMIT " . ( ( $this->_page - 1 ) * $this->_limit ) . ", $this->_limit";
+        $query      = $this->_query . " LIMIT :floorlimit, :rooflimit";
     }
-    $rs             = $this->_conn->query( $query , MYSQLI_USE_RESULT);
-    while ( $row = $rs->fetch_assoc() ) {
+    $this->_statement = $this->_conn->prepare($query);
+    $this->_statement->bindValue(':floorlimit', (int) ( ( $this->_page - 1 ) * $this->_limit ), PDO::PARAM_INT);
+    $this->_statement->bindValue(':rooflimit', (int) $this->_limit, PDO::PARAM_INT);
+    $this->_statement->execute();
+
+    while ( $row =  $this->_statement->fetch(PDO::FETCH_ASSOC) ) {
         $results[]  = $row;
     }
  
