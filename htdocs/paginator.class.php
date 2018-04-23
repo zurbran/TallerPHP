@@ -4,12 +4,13 @@
 
 class Paginator {
  
-     private $_conn;
-     private $_statement;
-        private $_limit;
-        private $_page;
-        private $_query;
-        private $_total;
+    private $_conn;
+    private $_statement;
+    private $_limit;
+    private $_page;
+    private $_query;
+    private $_total;
+ //   private $_search;
  
 
 public function __construct( $conn, $query ) {
@@ -27,6 +28,7 @@ public function getData( $limit, $page) {
      
     $this->_limit   = $limit;
     $this->_page    = $page;
+    //$this->_search  = $search;
 
     if ( $this->_limit == 'all' ) {
         $query      = $this->_query;
@@ -34,6 +36,7 @@ public function getData( $limit, $page) {
         $query      = $this->_query . " LIMIT :floorlimit, :rooflimit";
     }
     $this->_statement = $this->_conn->prepare($query);
+    //$this->_statement->bindValue(':searchT', (string) $this->_search, PDO::PARAM_STR);WHERE titulo LIKE :searchT
     $this->_statement->bindValue(':floorlimit', (int) ( ( $this->_page - 1 ) * $this->_limit ), PDO::PARAM_INT);
     $this->_statement->bindValue(':rooflimit', (int) $this->_limit, PDO::PARAM_INT);
     $this->_statement->execute();

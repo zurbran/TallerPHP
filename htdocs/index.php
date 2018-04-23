@@ -17,18 +17,20 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap.js"></script>
 
-        <?php
-        require_once "pdo-connect.php";
-        require_once 'paginator.class.php';
+    <?php
+    require_once "pdo-connect.php";
+    require_once 'paginator.class.php';
 
-        $links      = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 10;
-        $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
+    $links=  ( isset( $_GET['links'] ) ) ? $_GET['links'] : 10;
 
-        $pdoconn = $pdo;
-        $Paginator  = new Paginator( $pdoconn, $query );
+    $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
-        $results    = $Paginator->getData( $_GET['limit'] , $_GET['page']);
-        ?>
+    $pdoconn = $pdo;
+    $Paginator  = new Paginator( $pdoconn, $query );
+
+    $results    = $Paginator->getData($_GET['limit'] , $_GET['page']);
+    ?>
+    
 </head>
 <body style="padding-top: 70px;">
 
@@ -45,20 +47,20 @@
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-6">
-                <form>
+                <form action= 'show-search.php'>
                     <fieldset>
                     <legend>Refinar Búsqueda:</legend>
                         <div class="form-group">
                         <label for="titulobusqueda">Título</label>
-                        <input type="text" id="titulobusqueda" class="form-control" placeholder="Ingrese el título del libro a buscar">
+                        <input type="search" id="titulobusqueda" class="form-control" placeholder="Ingrese el título del libro a buscar" name="searchT">
                         </div>
                         <div class="form-group">
                         <label for="autorbusqueda">Autor</label>
-                        <input type="text" id="autorbusqueda" class="form-control" placeholder="Ingrese el autor el cual buscar">
+                        <input type="search" id="autorbusqueda" class="form-control" placeholder="Ingrese el autor el cual buscar" name="searchA">
                         </div>
                         <div class="checkbox">
                         </div>
-                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <button type="submit" name ="searchTt" value="Busqueda" class="btn btn-primary">Buscar</button>
                     </fieldset>
                 </form>
             </div>
