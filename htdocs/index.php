@@ -25,7 +25,7 @@
     $limit=  ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : 5;
     $page=  ( isset( $_GET['page'] ) ) ? $_GET['page'] : 1;
 
-    $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
+    $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido,l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
     $pdoconn = $pdo;
     $Paginator  = new Paginator( $pdoconn, $query );
@@ -108,7 +108,36 @@
                             <th scope="row"><?php echo $Hinh ?></th>
                             <?php echo '<td><a href="/single-book.php?libro_id='.  $results->data[$i]["id"]  .'"> ' . $results->data[$i]["titulo"] .' </a></td> ';?> 
                             <?php echo '<td><a href="/show-writers.php?author_id='. $results->data[$i]["autores_id"] .'&limit=5&page=1"> ' . $results->data[$i]["nombre"] . " " . $results->data[$i]["apellido"] . '</a></td>';?>
-                            <td><?php echo $results->data[$i]["cantidad"] ?></td>
+                            <?php 
+                                $total = $results->data[$i]["cantidad"];
+                                $prestados = $results->data[$i]["prestados"];
+                                $reservados = $results->data[$i]["reservados"];
+                                $disponibles = $total - $prestados - $reservados;
+                                $stockString = "<td> ";
+                                $stockString .= $total . "(";
+                                if($disponibles > 0)
+                                {
+                                    $stockString .= $disponibles . " disponibles";
+                                    if(($prestados > 0)|| ($reservados > 0))
+                                    {
+                                        $stockString .= "- ";
+                                    }
+                                }
+                                if($prestados > 0)
+                                {
+                                    $stockString .= $prestados . " prestados ";
+                                    if($reservados > 0)
+                                    {
+                                        $stockString .= "- ";
+                                    }
+                                }
+                                if($reservados > 0 )
+                                {
+                                    $stockString .= $reservados . " reservados";
+                                }
+                                $stockString .= ") </td>";
+                                echo $stockString;
+                                ?>
                             </tr>
                         <?php
                             endfor;
