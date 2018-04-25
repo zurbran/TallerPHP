@@ -22,13 +22,27 @@
     require_once 'paginator.class.php';
 
     $links=  ( isset( $_GET['links'] ) ) ? $_GET['links'] : 10;
+    $limit=  ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : 5;
+    $page=  ( isset( $_GET['page'] ) ) ? $_GET['page'] : 1;
 
     $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
     $pdoconn = $pdo;
     $Paginator  = new Paginator( $pdoconn, $query );
 
-    $results    = $Paginator->getData($_GET['limit'] , $_GET['page']);
+    // if(isset($_GET['searchT'])|(isset($_GET['searchA'])))
+    // {
+        $title = $_GET['searchT'] ?? '';
+        $author = $_GET['searchA'] ?? '';
+
+        $results    = $Paginator->getData($limit , $page, $author, $title);
+    // }
+    // else
+    // {
+    //     $results    = $Paginator->getData($limit , $page, '', '');
+    // }
+
+
     ?>
     
 </head>
@@ -47,7 +61,7 @@
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-6">
-                <form action= 'show-search.php'>
+                <form action= 'index.php'>
                     <fieldset>
                     <legend>Refinar Búsqueda:</legend>
                         <div class="form-group">

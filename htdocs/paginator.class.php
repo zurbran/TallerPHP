@@ -17,18 +17,47 @@ public function __construct( $conn, $query ) {
      
     $this->_conn = $conn;
     $this->_query = $query;
-    $this->_statement = $this->_conn->prepare($query);
-    $this->_statement->execute();
-
-    $this->_total = $this->_statement->rowCount();
-     
 }
 
-public function getData( $limit, $page) {
-     
+private function totalRows($author, $title){
+    if(!empty($author)||!empty($title))
+    {
+        $this->_query .= " WHERE";
+        if(!empty($author))
+        {
+            $this->_query .= ' (CONCAT(a.nombre, " ", a.apellido) LIKE :searchAn OR CONCAT(a.apellido, " ", a.nombre) LIKE :searchAa)';
+            if(!empty($title))
+            {
+                $this->_query .= " AND (l.titulo LIKE :searchT)";
+                $this->_statement = $this->_conn->prepare($this->_query);
+                $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
+            }
+            else
+            {
+                $this->_statement = $this->_conn->prepare($this->_query);
+            }
+            $this->_statement->bindValue(':searchAa', '%'.$author.'%', PDO::PARAM_STR);
+            $this->_statement->bindValue(':searchAn', '%'.$author.'%', PDO::PARAM_STR);
+        }
+        else
+        {
+            $this->_query .= " (l.titulo LIKE :searchT)";
+            $this->_statement = $this->_conn->prepare($this->_query);
+            $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
+        }
+    }
+    else
+    {
+        $this->_statement = $this->_conn->prepare($this->_query);
+    }
+    $this->_statement->execute();
+    return $this->_statement->rowCount();
+}
+
+public function getData( $limit, $page, $author, $title) {
+    $this->_total = $this->totalRows($author, $title);
     $this->_limit   = $limit;
     $this->_page    = $page;
-    //$this->_search  = $search;
 
     if ( $this->_limit == 'all' ) {
         $query      = $this->_query;
@@ -36,9 +65,17 @@ public function getData( $limit, $page) {
         $query      = $this->_query . " LIMIT :floorlimit, :rooflimit";
     }
     $this->_statement = $this->_conn->prepare($query);
-    //$this->_statement->bindValue(':searchT', (string) $this->_search, PDO::PARAM_STR);WHERE titulo LIKE :searchT
     $this->_statement->bindValue(':floorlimit', (int) ( ( $this->_page - 1 ) * $this->_limit ), PDO::PARAM_INT);
     $this->_statement->bindValue(':rooflimit', (int) $this->_limit, PDO::PARAM_INT);
+    if(!empty($title))
+    {
+        $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
+    }
+    if(!empty($author))
+    {
+        $this->_statement->bindValue(':searchAa', '%'.$author.'%', PDO::PARAM_STR);
+        $this->_statement->bindValue(':searchAn', '%'.$author.'%', PDO::PARAM_STR);
+    }
     $this->_statement->execute();
 
     while ( $row =  $this->_statement->fetch(PDO::FETCH_ASSOC) ) {
@@ -50,7 +87,7 @@ public function getData( $limit, $page) {
     $result->limit  = $this->_limit;
     $result->total  = $this->_total;
     $result->data   = $results;
- 
+    
     return $result;
 }
 
