@@ -24,7 +24,7 @@
         $searchA = $_GET['searchA'];
         $searchT = $_GET['searchT'];
 
-        $stmt= $pdo->prepare('SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE (l.titulo LIKE :searchT) AND ((a.nombre LIKE :searchAn) OR (a.apellido LIKE :searchAa))');
+        $stmt= $pdo->prepare('SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE (l.titulo LIKE :searchT) AND ((a.nombre LIKE :searchAn) OR (a.apellido LIKE :searchAa)) ORDER BY l.titulo ASC');
 
         $stmt->execute(array(':searchT' => '%'.$_GET['searchT'].'%', ':searchAn' => '%'.$_GET['searchA'].'%', ':searchAa' => '%'.$_GET['searchA'].'%'));
 

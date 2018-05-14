@@ -10,13 +10,34 @@ class Paginator {
     private $_page;
     private $_query;
     private $_total;
- //   private $_search;
+    private $_sort;
+    private $_order;
  
 
-public function __construct( $conn, $query ) {
+public function __construct( $conn, $query, $sort, $order ) {
      
     $this->_conn = $conn;
+    $this->_sort = $sort;
+    $this->_order = $order;
     $this->_query = $query;
+}
+
+private function setOrder(){
+    $this->_query .= " ORDER BY";
+    switch($this->_sort){
+        case 2:
+        case 3:
+            $this->_query .= " a.nombre";
+            break;
+        default:
+            $this->_query .= " l.titulo";
+            break;
+    }
+
+    if($this->_order != 0)
+        $this->_query .= " DESC";
+    else
+        $this->_query .= " ASC";
 }
 
 private function totalRows($author, $title){
@@ -50,6 +71,7 @@ private function totalRows($author, $title){
     {
         $this->_statement = $this->_conn->prepare($this->_query);
     }
+
     $this->_statement->execute();
     return $this->_statement->rowCount();
 }
@@ -58,6 +80,8 @@ public function getData( $limit, $page, $author, $title) {
     $this->_total = $this->totalRows($author, $title);
     $this->_limit   = $limit;
     $this->_page    = $page;
+
+    $this->setOrder();
 
     if ( $this->_limit == 'all' ) {
         $query      = $this->_query;
@@ -107,7 +131,7 @@ public function createLinks( $links, $list_class, $paginatorlabel ) {
     $class      = ( $this->_page == 1 ) ? "page-item disabled" : "page-item";
     $aclass     = "page-link";
 
-    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&page=' . ( $this->_page - 1 ) . '">Anterior</a></li>';
+    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&page=' . ( $this->_page - 1 ) . '">Anterior</a></li>';
  
     if ( $start > 1 ) {
         $html   .= '<li><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&page=1">1</a></li>';
@@ -116,7 +140,7 @@ public function createLinks( $links, $list_class, $paginatorlabel ) {
  
     for ( $i = $start ; $i <= $end; $i++ ) {
         $class  = ( $this->_page == $i ) ? "page-item active" : "page-item";
-        $html   .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&page=' . $i . '">' . $i . '</a></li>';
+        $html   .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&page=' . $i . '">' . $i . '</a></li>';
     }
  
     if ( $end < $last ) {
@@ -125,7 +149,7 @@ public function createLinks( $links, $list_class, $paginatorlabel ) {
     }
  
     $class      = ( $this->_page == $last ) ? "page-item disabled" : "page-item";
-    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&page=' . ( $this->_page + 1 ) . '">Siguiente</a></li>';
+    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&page=' . ( $this->_page + 1 ) . '">Siguiente</a></li>';
  
     $html       .= '</ul>';
     $html       .= '</nav>';

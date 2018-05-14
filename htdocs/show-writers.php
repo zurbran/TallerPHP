@@ -26,7 +26,7 @@
         require_once "pdo-connect.php";
         require_once 'paginator.class.php';
 
-        $stmt= $pdo->prepare('SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id = :author');
+        $stmt= $pdo->prepare('SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id = :author ORDER BY l.titulo ASC');
         $stmt->execute([':author' => $_GET['author_id']]);
 
         $data= $stmt->fetchAll();

@@ -21,28 +21,22 @@
     require_once "pdo-connect.php";
     require_once 'paginator.class.php';
 
-    $links=  ( isset( $_GET['links'] ) ) ? $_GET['links'] : 10;
-    $limit=  ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : 5;
-    $page=  ( isset( $_GET['page'] ) ) ? $_GET['page'] : 1;
+    $links= isset( $_GET['links'] ) ? $_GET['links'] : 10;
+    $limit= isset( $_GET['limit'] ) ? $_GET['limit'] : 5;
+    $page=  isset( $_GET['page'] )  ? $_GET['page']  : 1;
+    $sort=  isset( $_GET['sort'] )  ? $_GET['sort']  : 0;
+    $order= isset( $_GET['order'] ) ? $_GET['order'] : 0;
 
     $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido,l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
     $pdoconn = $pdo;
-    $Paginator  = new Paginator( $pdoconn, $query );
 
-    // if(isset($_GET['searchT'])|(isset($_GET['searchA'])))
-    // {
-        $title = $_GET['searchT'] ?? '';
-        $author = $_GET['searchA'] ?? '';
+    $Paginator  = new Paginator( $pdoconn, $query, $sort, $order );
 
-        $results    = $Paginator->getData($limit , $page, $author, $title);
-    // }
-    // else
-    // {
-    //     $results    = $Paginator->getData($limit , $page, '', '');
-    // }
+    $title = $_GET['searchT'] ?? '';
+    $author = $_GET['searchA'] ?? '';
 
-
+    $results    = $Paginator->getData($limit , $page, $author, $title);
     ?>
     
 </head>
@@ -90,8 +84,8 @@
                         <thead class="thead-dark">
                             <tr>
                             <th scope="col">Portada</th>
-                            <th scope="col">Titulo</th>
-                            <th scope="col">Autor</th>
+                            <th scope="col"><a href="/index.php?sort=0&order=<?=(($order == 0)?1:0);?>&limit=5&page=1">Titulo</a></th>
+                            <th scope="col"><a href="/index.php?sort=2&order=<?=(($order == 0)?1:0);?>&limit=5&page=1">Autor</a></th>
                             <th scope="col">Ejemplares</th>
                             </tr>
                         </thead>
@@ -101,7 +95,6 @@
                                 for( $i = 0; $i < count( $results->data ); $i++ ) :
                                     $image_data = $results->data[$i]["portada"];
                                     $encoded_image = base64_encode($image_data);
-                                    // $Hinh = "<img  src='data:image/" . $results->data[$i]['tipoimagen'] . ";base64,{$encoded_image}' width='200' height='200' />";
                                     $Hinh = "<a href='/single-book.php?libro_id=" . $results->data[$i]["id"] . "'><img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' /> </a>";
                         ?>
                             <tr>
@@ -166,5 +159,4 @@
         </div>
     </div>
 </body>
-
 </html>
