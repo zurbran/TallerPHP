@@ -26,14 +26,19 @@
         require_once "pdo-connect.php";
         require_once 'paginator.class.php';
 
-        $stmt= $pdo->prepare('SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id = :author ORDER BY l.titulo ASC');
+        $stmt= $pdo->prepare('SELECT a.nombre, a.apellido FROM autores a WHERE a.id = :author');
         $stmt->execute([':author' => $_GET['author_id']]);
-
         $data= $stmt->fetchAll();
         $stmt= null;
 
-        //$writerPaginator  = new Paginator( $pdo );
-        //$writerBooks = $writerPaginator->getData( $_GET['limit'] , $_GET['page']);
+        $query= 'SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id = :author ORDER BY l.titulo ASC';
+
+        $name= $data[0]['nombre'] . " " . $data[0]['apellido'];
+
+        echo $name;
+
+        $writerPaginator  = new Paginator( $pdo, $query, 1, 1 );
+        $writerBooks = $writerPaginator->getData( $_GET['limit'] , $_GET['page'], $name,'*');
         
         ?>
 </head>
@@ -102,7 +107,7 @@
             </div>
             <div class="col-md-3">
                    <?php
-            //        echo $writerPaginator->createLinks( $links, 'pagination','indexpages' );
+                    echo $writerPaginator->createLinks( $links, 'pagination','indexpages' );
                    ?>
             </div>
             <div class="col-md-4">
