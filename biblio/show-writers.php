@@ -61,7 +61,7 @@
         <div class="row">
             <div class="col-md-1">
             </div>
-            <div class="col-xs-16 col-sm-10 col-md-10" style="height: 600px; overflow: auto;">
+            <div class="col-xs-16 col-sm-10 col-md-10">
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>

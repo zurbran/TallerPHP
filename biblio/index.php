@@ -94,19 +94,17 @@
                                 for( $i = 0; $i < count( $results->data ); $i++ ) :
                                     $image_data = $results->data[$i]["portada"];
                                     $encoded_image = base64_encode($image_data);
-                                    $Hinh = "<a href='/single-book.php?libro_id=" . $results->data[$i]["id"] . "'><img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' /> </a>";
                         ?>
                             <tr>
-                            <th scope="row"><?php echo $Hinh ?></th>
-                            <?php echo '<td><a href="/single-book.php?libro_id='.  $results->data[$i]["id"]  .'"> ' . $results->data[$i]["titulo"] .' </a></td> ';?> 
-                            <?php echo '<td><a href="/show-writers.php?author_id='. $results->data[$i]["autores_id"] .'&limit=5&page=1"> ' . $results->data[$i]["nombre"] . " " . $results->data[$i]["apellido"] . '</a></td>';?>
+                            <th scope="row"><a href='/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><img  src="data:image/jpg;base64,<?=$encoded_image?>" width='200' height='200' /> </a></th>
+                            <td><a href='/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
+                            <td><a href='/show-writers.php?author_id=<?=$results->data[$i]["autores_id"]?>&limit=5&page=1'><?=$results->data[$i]["nombre"]?> <?=$results->data[$i]["apellido"]?></a></td>
                             <?php 
                                 $total = $results->data[$i]["cantidad"];
                                 $prestados = $results->data[$i]["prestados"];
                                 $reservados = $results->data[$i]["reservados"];
                                 $disponibles = $total - $prestados - $reservados;
-                                $stockString = "<td> ";
-                                $stockString .= $total . "(";
+                                $stockString = $total . "(";
                                 if($disponibles > 0)
                                 {
                                     $stockString .= $disponibles . " disponibles";
@@ -128,8 +126,8 @@
                                     $stockString .= $reservados . " reservados";
                                 }
                                 $stockString .= ") </td>";
-                                echo $stockString;
-                                ?>
+                            ?>
+                            <td><?=$stockString?></td>
                             </tr>
                         <?php
                             endfor;
