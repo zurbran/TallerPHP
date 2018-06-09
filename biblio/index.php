@@ -92,8 +92,8 @@
                         <thead class="thead-dark">
                             <tr>
                             <th scope="col">Portada</th>
-                            <th scope="col"><a href="/index.php?sort=0&order=<?=(($order == 0)?1:0);?>&limit=5&page=1">Titulo</a></th>
-                            <th scope="col"><a href="/index.php?sort=2&order=<?=(($order == 0)?1:0);?>&limit=5&page=1">Autor</a></th>
+                            <th scope="col"><a href="/index.php?sort=0&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Titulo</a></th>
+                            <th scope="col"><a href="/index.php?sort=2&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Autor</a></th>
                             <th scope="col">Ejemplares</th>
                             </tr>
                         </thead>
