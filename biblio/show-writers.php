@@ -26,19 +26,16 @@
         require_once "pdo-connect.php";
         require_once 'paginator.class.php';
 
+        $links= isset( $_GET['links'] ) ? $_GET['links'] : 10;
         $stmt= $pdo->prepare('SELECT a.nombre, a.apellido FROM autores a WHERE a.id = :author');
         $stmt->execute([':author' => $_GET['author_id']]);
         $predata= $stmt->fetchAll();
         $stmt= null;
-
-        //$query= 'SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id = :author ORDER BY l.titulo ASC';
-
-        $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido,l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
-
         $name= $predata[0]['nombre'] . " " . $predata[0]['apellido'];
 
+        $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido,l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
         $writerPaginator  = new Paginator( $pdo, $query, 1, 1 );
-        $results = $writerPaginator->getData( $_GET['limit'] , $_GET['page'], $name,'*');
+        $results = $writerPaginator->getData( $_GET['limit'] , $_GET['page'], $name,'');
         
         ?>
 </head>
@@ -60,7 +57,7 @@
         <hr/>
 
         <div class="row">
-            <?php echo "<p class='h1 titulo-libro'> Libros de " . $predata[0]['nombre'] . " " . $predata[0]['apellido'] . "</p>"?>
+            <p class='h1 titulo-libro'> Libros de <?= $name ?> </p>
         </div>
 
         <div class="row">
@@ -134,7 +131,7 @@
             </div>
             <div class="col-md-3">
                    <?php
-                    echo $writerPaginator->createLinks( $links, 'pagination','indexpages', '*', $name);
+                    $writerPaginator->createLinks( $links, 'pagination','indexpages', '', '');
                    ?>
             </div>
             <div class="col-md-4">
