@@ -9,8 +9,8 @@ $options = [
 try {
   $pdo = new PDO($dsn, "root", "asdasd", $options);
 } catch (Exception $e) {
-  error_log($e->getMessage()); //In production
-  exit('Something weird happened'); //something a user can understand
+  error_log($e->getMessage());
+  exit('Error en la conexion a la base de datos...');
 }
 
 ?>
