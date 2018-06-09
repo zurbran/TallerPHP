@@ -124,38 +124,48 @@ public function createLinks( $links, $list_class, $paginatorlabel, $tittle, $aut
  
     $start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
     $end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
- 
-    $html       =  '<nav aria-label="' . $paginatorlabel . '">';
-    $html       .= '<ul class="' . $list_class . '">';
- 
     $class      = ( $this->_page == 1 ) ? "page-item disabled" : "page-item";
     $aclass     = "page-link";
-
-    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=' . ( $this->_page - 1 ) . '">Anterior</a></li>';
- 
-    if ( $start > 1 ) {
-        $html   .= '<li><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=1">1</a></li>';
-        $html   .= '<li class="page-item disabled"><span>...</span></li>';
+    ?>
+    <nav aria-label='<?=$paginatorlabel?>'>
+        <ul class='<?=$list_class?>'>
+            <li class='<?=$class?>'>
+                <a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?$this->_limit?>&searchA=<?$author?>&searchT=<?$tittle?>&page=<?=($this->_page - 1 )?>">Anterior</a>
+            </li>
+    <?php
+    if ( $start > 1 ) 
+    {?>
+        <li><a class='<?=$aclass?>' href="?limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=1">1</a></li>
+        <li class="page-item disabled"><span>...</span></li>
+    <?php
     }
+    ?>
  
+    <?php
     for ( $i = $start ; $i <= $end; $i++ ) {
         $class  = ( $this->_page == $i ) ? "page-item active" : "page-item";
-        $html   .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=' . $i . '">' . $i . '</a></li>';
+    ?>
+        <li class='<?=$class?>'><a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=$i?>"><?=$i?></a></li>
+    <?php
     }
+    ?>
  
+    <?php
     if ( $end < $last ) {
-        $html   .= '<li class="page-item disabled"><span>...</span></li>';
-        $html   .= '<li><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=' . $last . '">' . $last . '</a></li>';
+    ?>
+        <li class="page-item disabled"><span>...</span></li>
+        <li><a class="<?=$aclass?>" href="?limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=$last?>"><?=$last?></a></li>
+    <?php
     }
+    ?>
  
+    <?php
     $class      = ( $this->_page == $last ) ? "page-item disabled" : "page-item";
-    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=' . ( $this->_page + 1 ) . '">Siguiente</a></li>';
- 
-    $html       .= '</ul>';
-    $html       .= '</nav>';
- 
-    return $html;
+    ?>
+    <li class="<?=$class?>"><a class="<?=$aclass?>" href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=( $this->_page + 1 )?>">Siguiente</a></li>
+    </ul>
+    </nav>
+<?php
 }
 
-}
-?>
+}?>

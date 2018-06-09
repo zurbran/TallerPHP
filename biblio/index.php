@@ -148,7 +148,7 @@
             </div>
             <div class="col-md-3">
                     <?php
-                    echo $Paginator->createLinks( $links, 'pagination','indexpages', $tittle, $author);
+                    $Paginator->createLinks( $links, 'pagination','indexpages', $tittle, $author);
                     ?>
             </div>
             <div class="col-md-4">
