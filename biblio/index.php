@@ -59,11 +59,11 @@
                     <legend>Refinar Búsqueda:</legend>
                         <div class="form-group">
                         <label for="titulobusqueda">Título</label>
-                        <input type="search" id="titulobusqueda" class="form-control" placeholder="Ingrese el título del libro a buscar" name="searchT">
+                        <input type="search" id="titulobusqueda" class="form-control" placeholder="Ingrese el título del libro a buscar" name="searchT" value= "<?= $tittle?>">
                         </div>
                         <div class="form-group">
                         <label for="autorbusqueda">Autor</label>
-                        <input type="search" id="autorbusqueda" class="form-control" placeholder="Ingrese el autor el cual buscar" name="searchA">
+                        <input type="search" id="autorbusqueda" class="form-control" placeholder="Ingrese el autor el cual buscar" name="searchA" value= "<?= $author?>">
                         </div>
                         <div class="checkbox">
                         </div>
