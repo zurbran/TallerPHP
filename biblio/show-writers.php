@@ -28,17 +28,17 @@
 
         $stmt= $pdo->prepare('SELECT a.nombre, a.apellido FROM autores a WHERE a.id = :author');
         $stmt->execute([':author' => $_GET['author_id']]);
-        $data= $stmt->fetchAll();
+        $predata= $stmt->fetchAll();
         $stmt= null;
 
-        $query= 'SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id = :author ORDER BY l.titulo ASC';
+        //$query= 'SELECT l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.autores_id = :author ORDER BY l.titulo ASC';
 
-        $name= $data[0]['nombre'] . " " . $data[0]['apellido'];
+        $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido,l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
-        echo $name;
+        $name= $predata[0]['nombre'] . " " . $predata[0]['apellido'];
 
         $writerPaginator  = new Paginator( $pdo, $query, 1, 1 );
-        $writerBooks = $writerPaginator->getData( $_GET['limit'] , $_GET['page'], $name,'*');
+        $results = $writerPaginator->getData( $_GET['limit'] , $_GET['page'], $name,'*');
         
         ?>
 </head>
@@ -60,7 +60,7 @@
         <hr/>
 
         <div class="row">
-            <?php echo "<p class='h1 titulo-libro'> Libros de " . $data[0]['nombre'] . " " . $data[0]['apellido'] . "</p>"?>
+            <?php echo "<p class='h1 titulo-libro'> Libros de " . $predata[0]['nombre'] . " " . $predata[0]['apellido'] . "</p>"?>
         </div>
 
         <div class="row">
@@ -78,15 +78,42 @@
 
                         <tbody>
                         <?php
-                                for( $i = 0; $i < count( $data ); $i++ ) :
-                                    $image_data = $data[$i]["portada"];
+                                for( $i = 0; $i < count( $results->data ); $i++ ) :
+                                    $image_data = $results->data[$i]["portada"];
                                     $encoded_image = base64_encode($image_data);
-                                    $Hinh = "<a href='/single-book.php?libro_id=" . $data[$i]["id"] . "'><img  src='data:image/jpg;base64,{$encoded_image}' width='200' height='200' /> </a>";
                         ?>
                             <tr>
-                            <th scope="row"><?php echo $Hinh ?></th>
-                            <?php echo '<td><a href="/single-book.php?libro_id='.  $data[$i]["id"]  .'"> ' . $data[$i]["titulo"] .' </a></td> ';?> 
-                            <td><?php echo $data[$i]["cantidad"] ?></td>
+                            <th scope="row"><a href='/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><img  src="data:image/jpg;base64,<?=$encoded_image?>" width='200' height='200' /> </a></th>
+                            <td><a href='/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
+                                <?php 
+                                    $total = $results->data[$i]["cantidad"];
+                                    $prestados = $results->data[$i]["prestados"];
+                                    $reservados = $results->data[$i]["reservados"];
+                                    $disponibles = $total - $prestados - $reservados;
+                                    $stockString = $total . "(";
+                                    if($disponibles > 0)
+                                    {
+                                        $stockString .= $disponibles . " disponibles";
+                                        if(($prestados > 0)|| ($reservados > 0))
+                                        {
+                                            $stockString .= "- ";
+                                        }
+                                    }
+                                    if($prestados > 0)
+                                    {
+                                        $stockString .= $prestados . " prestados ";
+                                        if($reservados > 0)
+                                        {
+                                            $stockString .= "- ";
+                                        }
+                                    }
+                                    if($reservados > 0 )
+                                    {
+                                        $stockString .= $reservados . " reservados";
+                                    }
+                                    $stockString .= ") </td>";
+                                ?>
+                            <td><?=$stockString?></td>
                             </tr>
                         <?php
                             endfor;
@@ -107,7 +134,7 @@
             </div>
             <div class="col-md-3">
                    <?php
-                    echo $writerPaginator->createLinks( $links, 'pagination','indexpages' );
+                    echo $writerPaginator->createLinks( $links, 'pagination','indexpages', '*', $name);
                    ?>
             </div>
             <div class="col-md-4">
