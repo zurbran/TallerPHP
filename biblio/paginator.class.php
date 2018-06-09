@@ -172,4 +172,57 @@ public function createLinks( $links, $list_class, $paginatorlabel, $tittle, $aut
 <?php
 }
 
+public function createAuthorLinks( $links, $list_class, $paginatorlabel, $id, $author) {
+    if ( $this->_limit == 'all' ) {
+        return '';
+    }
+ 
+    $last       = ceil( $this->_total / $this->_limit );
+ 
+    $start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
+    $end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
+    $class      = ( $this->_page == 1 ) ? "page-item disabled" : "page-item";
+    $aclass     = "page-link";
+    ?>
+    <nav aria-label='<?=$paginatorlabel?>'>
+        <ul class='<?=$list_class?>'>
+            <li class='<?=$class?>'>
+                <a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?$author?>&author_id=<?=$id?>&page=<?=($this->_page - 1 )?>">Anterior</a>
+            </li>
+    <?php
+    if ( $start > 1 ) 
+    {?>
+        <li><a class='<?=$aclass?>' href="?limit=<?=$this->_limit?>&searchA=<?=$author?>&author_id=<?=$id?>&page=1">1</a></li>
+        <li class="page-item disabled"><span>...</span></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    for ( $i = $start ; $i <= $end; $i++ ) {
+        $class  = ( $this->_page == $i ) ? "page-item active" : "page-item";
+    ?>
+        <li class='<?=$class?>'><a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&author_id=<?=$id?>&page=<?=$i?>"><?=$i?></a></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    if ( $end < $last ) {
+    ?>
+        <li class="page-item disabled"><span>...</span></li>
+        <li><a class="<?=$aclass?>" href="?limit=<?=$this->_limit?>&searchA=<?=$author?>&author_id=<?=$id?>&page=<?=$last?>"><?=$last?></a></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    $class      = ( $this->_page == $last ) ? "page-item disabled" : "page-item";
+    ?>
+    <li class="<?=$class?>"><a class="<?=$aclass?>" href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&author_id=<?=$id?>&page=<?=( $this->_page + 1 )?>">Siguiente</a></li>
+    </ul>
+    </nav>
+<?php
+}
+
 }?>

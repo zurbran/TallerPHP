@@ -27,8 +27,15 @@
         require_once 'paginator.class.php';
 
         $links= isset( $_GET['links'] ) ? $_GET['links'] : 10;
+        $authorId = isset($_GET['author_id']) ? $_GET['author_id'] : NULL;
+        if($authorId == NULL)
+        {
+            echo "Autor Invalido";
+        }
+        else
+        {
         $stmt= $pdo->prepare('SELECT a.nombre, a.apellido FROM autores a WHERE a.id = :author');
-        $stmt->execute([':author' => $_GET['author_id']]);
+        $stmt->execute([':author' => $authorId]);
         $predata= $stmt->fetchAll();
         $stmt= null;
         $name= $predata[0]['nombre'] . " " . $predata[0]['apellido'];
@@ -131,7 +138,7 @@
             </div>
             <div class="col-md-3">
                    <?php
-                    $writerPaginator->createLinks( $links, 'pagination','indexpages', '', '');
+                    $writerPaginator->createAuthorLinks( $links, 'pagination','indexpages', $authorId, $name);
                    ?>
             </div>
             <div class="col-md-4">
@@ -139,5 +146,7 @@
         </div>
     </div>
 </body>
-
+<?php
+    }
+?>
 </html>
