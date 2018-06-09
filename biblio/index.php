@@ -36,6 +36,7 @@
     $Paginator  = new Paginator( $pdoconn, $query, $sort, $order );
 
     $results    = $Paginator->getData($limit , $page, $author, $tittle);
+
     ?>
     
 </head>
@@ -78,6 +79,14 @@
         <div class="row">
             <div class="col-md-1">
             </div>
+            <?php
+                if($results == NULL)
+                {
+                    echo "No se encontraron libros.";
+                }
+                else
+                {
+            ?>
             <div class="col-xs-16 col-sm-10 col-md-10">
                     <table class="table table-bordered">
                         <thead class="thead-dark">
@@ -155,5 +164,8 @@
             </div>
         </div>
     </div>
+    <?php
+    }
+    ?>
 </body>
 </html>

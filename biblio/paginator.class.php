@@ -78,6 +78,10 @@ private function totalRows($author, $title){
 
 public function getData( $limit, $page, $author, $title) {
     $this->_total = $this->totalRows($author, $title);
+    if($this->_total == 0)
+    {
+        return NULL;
+    }
     $this->_limit   = $limit;
     $this->_page    = $page;
 
