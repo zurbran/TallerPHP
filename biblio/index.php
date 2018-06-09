@@ -67,7 +67,7 @@
                         </div>
                         <div class="checkbox">
                         </div>
-                        <button type="submit" name ="searchTt" value="Busqueda" class="btn btn-primary">Buscar</button>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
                     </fieldset>
                 </form>
             </div>
