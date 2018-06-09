@@ -126,8 +126,8 @@ public function createLinks( $links, $list_class, $paginatorlabel, $tittle, $aut
  
     $last       = ceil( $this->_total / $this->_limit );
  
-    $start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
-    $end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
+    $start      = ( ( $this->_page - $links ) > 2 ) ? $this->_page - $links : 1;
+    $end        = ( ( $this->_page + $links ) < $last-1 ) ? $this->_page + $links : $last;
     $class      = ( $this->_page == 1 ) ? "page-item disabled" : "page-item";
     $aclass     = "page-link";
     ?>
@@ -179,8 +179,8 @@ public function createAuthorLinks( $links, $list_class, $paginatorlabel, $id, $a
  
     $last       = ceil( $this->_total / $this->_limit );
  
-    $start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
-    $end        = ( ( $this->_page + $links ) < $last ) ? $this->_page + $links : $last;
+    $start      = ( ( $this->_page - $links ) > 2 ) ? $this->_page - $links : 1;
+    $end        = ( ( $this->_page + $links ) < $last-1 ) ? $this->_page + $links : $last;
     $class      = ( $this->_page == 1 ) ? "page-item disabled" : "page-item";
     $aclass     = "page-link";
     ?>

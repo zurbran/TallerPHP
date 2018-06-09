@@ -21,7 +21,7 @@
     require_once "pdo-connect.php";
     require_once 'paginator.class.php';
 
-    $links= isset( $_GET['links'] ) ? $_GET['links'] : 10;
+    $links= isset( $_GET['links'] ) ? $_GET['links'] : 1;
     $limit= isset( $_GET['limit'] ) ? $_GET['limit'] : 5;
     $page=  isset( $_GET['page'] )  ? $_GET['page']  : 1;
     $sort=  isset( $_GET['sort'] )  ? $_GET['sort']  : 0;
