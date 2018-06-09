@@ -115,7 +115,7 @@ public function getData( $limit, $page, $author, $title) {
     return $result;
 }
 
-public function createLinks( $links, $list_class, $paginatorlabel ) {
+public function createLinks( $links, $list_class, $paginatorlabel, $tittle, $author) {
     if ( $this->_limit == 'all' ) {
         return '';
     }
@@ -131,25 +131,25 @@ public function createLinks( $links, $list_class, $paginatorlabel ) {
     $class      = ( $this->_page == 1 ) ? "page-item disabled" : "page-item";
     $aclass     = "page-link";
 
-    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&page=' . ( $this->_page - 1 ) . '">Anterior</a></li>';
+    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=' . ( $this->_page - 1 ) . '">Anterior</a></li>';
  
     if ( $start > 1 ) {
-        $html   .= '<li><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&page=1">1</a></li>';
+        $html   .= '<li><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=1">1</a></li>';
         $html   .= '<li class="page-item disabled"><span>...</span></li>';
     }
  
     for ( $i = $start ; $i <= $end; $i++ ) {
         $class  = ( $this->_page == $i ) ? "page-item active" : "page-item";
-        $html   .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&page=' . $i . '">' . $i . '</a></li>';
+        $html   .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=' . $i . '">' . $i . '</a></li>';
     }
  
     if ( $end < $last ) {
         $html   .= '<li class="page-item disabled"><span>...</span></li>';
-        $html   .= '<li><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&page=' . $last . '">' . $last . '</a></li>';
+        $html   .= '<li><a class="'. $aclass .'" href="?limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=' . $last . '">' . $last . '</a></li>';
     }
  
     $class      = ( $this->_page == $last ) ? "page-item disabled" : "page-item";
-    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&page=' . ( $this->_page + 1 ) . '">Siguiente</a></li>';
+    $html       .= '<li class="' . $class . '"><a class="'. $aclass .'" href="?sort=' . $this->_sort . '&order=' . $this->_order . '&limit=' . $this->_limit . '&searchA=' . $author . '&searchTt=' . $tittle . '&page=' . ( $this->_page + 1 ) . '">Siguiente</a></li>';
  
     $html       .= '</ul>';
     $html       .= '</nav>';

@@ -26,6 +26,8 @@
     $page=  isset( $_GET['page'] )  ? $_GET['page']  : 1;
     $sort=  isset( $_GET['sort'] )  ? $_GET['sort']  : 0;
     $order= isset( $_GET['order'] ) ? $_GET['order'] : 0;
+    $tittle = isset($_GET['searchT']) ? $_GET['searchT'] : '';
+    $author = isset($_GET['searchA']) ? $_GET['searchA'] : '';
 
     $query      = "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido,l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
@@ -33,10 +35,7 @@
 
     $Paginator  = new Paginator( $pdoconn, $query, $sort, $order );
 
-    $title = $_GET['searchT'] ?? '';
-    $author = $_GET['searchA'] ?? '';
-
-    $results    = $Paginator->getData($limit , $page, $author, $title);
+    $results    = $Paginator->getData($limit , $page, $author, $tittle);
     ?>
     
 </head>
@@ -79,7 +78,7 @@
         <div class="row">
             <div class="col-md-1">
             </div>
-            <div class="col-xs-16 col-sm-10 col-md-10" style="height: 600px; overflow: auto;">
+            <div class="col-xs-16 col-sm-10 col-md-10">
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
@@ -151,7 +150,7 @@
             </div>
             <div class="col-md-3">
                     <?php
-                    echo $Paginator->createLinks( $links, 'pagination','indexpages' );
+                    echo $Paginator->createLinks( $links, 'pagination','indexpages', $tittle, $author);
                     ?>
             </div>
             <div class="col-md-4">
