@@ -151,12 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindValue(':rol', 'LECTOR' , PDO::PARAM_STR);
         $stmt->execute();
         $pdo->lastInsertId();
-        ob_start();
-        $url = 'http://localhost/user-success.php';
-        while (ob_get_status()) 
-        {
-            ob_end_clean();
-        }
+        $_SESSION['user'] = $email;
+        $_SESSION['password'] = $pass;
+        $url = 'http://localhost/index.php';
         header( "Location: $url" );
     }
 }

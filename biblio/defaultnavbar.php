@@ -17,15 +17,14 @@
 			<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:white; text-decoration: none;">Iniciar Sesión / Registrarse</a>
 			<div class="dropdown-menu" aria-labelledby="dropdown03">
 				<div class="col-md-12">
-					<form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
+					<form class="form" role="form" method="post" action="/login.php" accept-charset="UTF-8" id="login-nav" enctype="multipart/form-data">
 						<div class="form-group">
-								<label class="sr-only" for="userinputnick">Usuario</label>
-								<input type="text" class="form-control" id="userinputnick" placeholder="Usuario" required>
+								<label class="sr-only" for="useremail">Usuario</label>
+								<input type="text" class="form-control" name="useremail" id="useremail" placeholder="Usuario" required>
 						</div>
 						<div class="form-group">
-								<label class="sr-only" for="exampleInputPassword2">Constraseña</label>
-								<input type="password" class="form-control" id="exampleInputPassword2" placeholder="Contraseña" required>
-																			<div class="help-block text-right"><a href="">¿Olvido su contraseña?</a></div>
+								<label class="sr-only" for="password">Constraseña</label>
+								<input type="password" class="form-control" name="password" id="password" placeholder="Contraseña" required>
 						</div>
 						<div class="form-group">
 								<button type="submit" class="btn btn-primary btn-block">Conectarse</button>
