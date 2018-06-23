@@ -1,13 +1,23 @@
-function reservate(id)
-{
-    var form = document.getElementById('reserve');
-    var input = $('<input></input>');
+function post(path, param, method) {
+    method = method || "post";
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
 
-    input.attr("type", "hidden");
-    input.attr("bookId", id);
-    input.attr("value", value);
-    form.appendChild(input);
+    var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("id", "bookId");
+    hiddenField.setAttribute("name", "bookId");
+    hiddenField.setAttribute("value", param);
+
+    form.appendChild(hiddenField);
+
 
     document.body.appendChild(form);
     form.submit();
+}
+
+function reservate(id)
+{
+    post("/index.php",id,"post");
 }

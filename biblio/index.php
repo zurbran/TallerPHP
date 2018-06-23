@@ -72,7 +72,7 @@
                     $userData['email'] = $email;
                     $userData['nombre'] = $row['nombre'];
                     $userData['apellido'] = $row['apellido'];
-                    $userData['password$'] = $password;
+                    $userData['password'] = $password;
                     $isLogged = true;
                 }
     
@@ -125,14 +125,6 @@
                 {
             ?>
             <div class="col-xs-16 col-sm-10 col-md-10">
-            <?php
-                if($isLogged)
-                {
-            ?>
-                    <form id="reserve" action="index.php" method="post" enctype="multipart/form-data">
-            <?php
-                }
-            ?>
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
@@ -180,14 +172,17 @@
                                     {
                                         $hasBook[$i] = true;
                                     }
-                                }
-                                if (($_SERVER['REQUEST_METHOD'] === 'POST')&&($disponibles > 0)&&(isset($_POST['bookId']))&&($_POST['bookId']==$results->data[$i]["id"])&&(!$hasBook[$i]))
-                                {
-                                            $currentDate = getdate();
-                                            $dateString = $currentDate['year']."-".$currentDate['month']."-".$currentDate['day'];
-                                            $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO','".$dateString."', :userid ,7)");
-                                            $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
-                                            $stmt->execute();
+                                    if (($_SERVER['REQUEST_METHOD'] === 'POST')&&($disponibles > 0)&&(isset($_POST['bookId']))&&($_POST['bookId']==$results->data[$i]["id"])&&(!$hasBook[$i]))
+                                    {
+                                        $dateString = date("Y:m:d");
+                                        $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO','".$dateString."', :userid , :bookid)");
+                                        $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
+                                        $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                        $stmt->execute();
+                                        $hasBook[$i] = false;
+                                        $disponibles--;
+                                        $reservados++;
+                                    }
                                 }
                                 $stockString = $total . "(";
                                 if($disponibles > 0)
@@ -238,14 +233,6 @@
 
 
                     </table>
-            <?php
-                if($isLogged)
-                {
-            ?>
-                </form>
-            <?php
-                }
-            ?>
             </div>
             <div class="col-md-1">
             </div>
