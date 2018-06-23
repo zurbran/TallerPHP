@@ -20,6 +20,8 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap.js"></script>
 
+    <script src="js/index.js"></script>
+
     <?php
     require_once "pdo-connect.php";
     require_once 'paginator.class.php';
@@ -60,6 +62,7 @@
 
                 if($stmt->rowCount() == 0)
                 {
+                    session_destroy();
                     throw new Exception("Credenciales invalidas.");
                 }
                 else
@@ -122,6 +125,14 @@
                 {
             ?>
             <div class="col-xs-16 col-sm-10 col-md-10">
+            <?php
+                if($isLogged)
+                {
+            ?>
+                    <form id="reserve" action="index.php" method="post" enctype="multipart/form-data">
+            <?php
+                }
+            ?>
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
@@ -129,6 +140,14 @@
                             <th scope="col"><a href="/index.php?sort=0&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Titulo</a></th>
                             <th scope="col"><a href="/index.php?sort=2&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Autor</a></th>
                             <th scope="col">Ejemplares</th>
+                            <?php
+                                if($isLogged)
+                                {
+                            ?>
+                            <th scope="col">Accion</th>
+                            <?php
+                                }
+                            ?>
                             </tr>
                         </thead>
 
@@ -147,6 +166,29 @@
                                 $prestados = $results->data[$i]["prestados"];
                                 $reservados = $results->data[$i]["reservados"];
                                 $disponibles = $total - $prestados - $reservados;
+                                if($isLogged)
+                                {
+                                    $stmt = $pdoconn->prepare("SELECT * FROM operaciones WHERE lector_id=:userid AND libros_id=:bookid AND NOT ultimo_estado='DEVUELTO'");
+                                    $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                    $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
+                                    $stmt->execute();
+                                    if($stmt->rowCount() == 0)
+                                    {
+                                        $hasBook[$i] = false;
+                                    }
+                                    else
+                                    {
+                                        $hasBook[$i] = true;
+                                    }
+                                }
+                                if (($_SERVER['REQUEST_METHOD'] === 'POST')&&($disponibles > 0)&&(isset($_POST['bookId']))&&($_POST['bookId']==$results->data[$i]["id"])&&(!$hasBook[$i]))
+                                {
+                                            $currentDate = getdate();
+                                            $dateString = $currentDate['year']."-".$currentDate['month']."-".$currentDate['day'];
+                                            $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO','".$dateString."', :userid ,7)");
+                                            $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                            $stmt->execute();
+                                }
                                 $stockString = $total . "(";
                                 if($disponibles > 0)
                                 {
@@ -171,6 +213,23 @@
                                 $stockString .= ") </td>";
                             ?>
                             <td><?=$stockString?></td>
+                            <?php
+                                if($isLogged)
+                                {
+                                    if(($disponibles > 0)&&(!$hasBook[$i]))
+                                    {
+                            ?>
+                                        <td><button type="button" onclick="reservate(<?=$results->data[$i]["id"]?>)" id="reserve" class="btn btn-dark" >Reservar</button></td>
+                            <?php
+                                    }
+                                    else
+                                    {
+                            ?>
+                                        <td></td>
+                            <?php
+                                    }
+                                }
+                            ?>
                             </tr>
                         <?php
                             endfor;
@@ -179,6 +238,14 @@
 
 
                     </table>
+            <?php
+                if($isLogged)
+                {
+            ?>
+                </form>
+            <?php
+                }
+            ?>
             </div>
             <div class="col-md-1">
             </div>
