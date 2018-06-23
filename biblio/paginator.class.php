@@ -119,6 +119,49 @@ public function getData( $limit, $page, $author, $title) {
     return $result;
 }
 
+private function totalHistoryRows($id){
+    $this->_statement = $this->_conn->prepare($this->_query);
+    $this->_statement->bindValue(':userid', (int) $id, PDO::PARAM_INT);
+    $this->_statement->execute();
+    return $this->_statement->rowCount();
+}
+
+public function getReaderHistory($limit, $page, $id){
+    $this->_total = $this->totalHistoryRows($id);
+    if($this->_total == 0)
+    {
+        return NULL;
+    }
+    $this->_limit   = $limit;
+    $this->_page    = $page;
+
+    $this->setOrder();
+
+    if ( $this->_limit == 'all' ) {
+        $query      = $this->_query;
+    } else {
+        $query      = $this->_query . " LIMIT :floorlimit, :rooflimit";
+    }
+    $this->_statement = $this->_conn->prepare($query);
+    $this->_statement->bindValue(':floorlimit', (int) ( ( $this->_page - 1 ) * $this->_limit ), PDO::PARAM_INT);
+    $this->_statement->bindValue(':rooflimit', (int) $this->_limit, PDO::PARAM_INT);
+    $this->_statement->bindValue(':userid', (int) $id, PDO::PARAM_INT);
+
+    $this->_statement->execute();
+
+    while ( $row =  $this->_statement->fetch(PDO::FETCH_ASSOC) ) {
+        $results[]  = $row;
+    }
+ 
+    $result         = new stdClass();
+    $result->page   = $this->_page;
+    $result->limit  = $this->_limit;
+    $result->total  = $this->_total;
+    $result->data   = $results;
+    
+    return $result;
+}
+
 public function createLinks( $links, $list_class, $paginatorlabel, $tittle, $author) {
     if ( $this->_limit == 'all' ) {
         return '';
@@ -225,4 +268,58 @@ public function createAuthorLinks( $links, $list_class, $paginatorlabel, $id, $a
 <?php
 }
 
-}?>
+public function createReaderHistoryLinks( $links, $list_class, $paginatorlabel) {
+    if ( $this->_limit == 'all' ) {
+        return '';
+    }
+ 
+    $last       = ceil( $this->_total / $this->_limit );
+ 
+    $start      = ( ( $this->_page - $links ) > 2 ) ? $this->_page - $links : 1;
+    $end        = ( ( $this->_page + $links ) < $last-1 ) ? $this->_page + $links : $last;
+    $class      = ( $this->_page == 1 ) ? "page-item disabled" : "page-item";
+    $aclass     = "page-link";
+    ?>
+    <nav aria-label='<?=$paginatorlabel?>'>
+        <ul class='<?=$list_class?>'>
+            <li class='<?=$class?>'>
+                <a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&page=<?=($this->_page - 1 )?>">Anterior</a>
+            </li>
+    <?php
+    if ( $start > 1 ) 
+    {?>
+        <li><a class='<?=$aclass?>' href="?limit=<?=$this->_limit?>&page=1">1</a></li>
+        <li class="page-item disabled"><span>...</span></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    for ( $i = $start ; $i <= $end; $i++ ) {
+        $class  = ( $this->_page == $i ) ? "page-item active" : "page-item";
+    ?>
+        <li class='<?=$class?>'><a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&page=<?=$i?>"><?=$i?></a></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    if ( $end < $last ) {
+    ?>
+        <li class="page-item disabled"><span>...</span></li>
+        <li><a class="<?=$aclass?>" href="?limit=<?=$this->_limit?>&page=<?=$last?>"><?=$last?></a></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    $class      = ( $this->_page == $last ) ? "page-item disabled" : "page-item";
+    ?>
+    <li class="<?=$class?>"><a class="<?=$aclass?>" href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&page=<?=( $this->_page + 1 )?>">Siguiente</a></li>
+    </ul>
+    </nav>
+<?php
+}
+
+}
+?>

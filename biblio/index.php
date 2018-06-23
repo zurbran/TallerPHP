@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
     <meta charset="UTF-8">
-    <title>Biblioteca UNLP</title>
+    <title>Biblioteca UNLP - Indice</title>
 
     <!-- Bootstrap Core CSS -->
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
@@ -53,7 +53,7 @@
                 $email = $_SESSION['email'];
                 $password = $_SESSION['password'];
 
-                $stmt = $pdoconn->prepare('SELECT id, nombre, apellido, foto, rol FROM usuarios WHERE email = :email AND clave = :password');
+                $stmt = $pdoconn->prepare('SELECT id, nombre, apellido FROM usuarios WHERE email = :email AND clave = :password');
                 $stmt->bindValue(':email', $email, PDO::PARAM_STR);
                 $stmt->bindValue(':password', $password, PDO::PARAM_STR);
                 $stmt->execute();
@@ -69,15 +69,15 @@
                     $userData['email'] = $email;
                     $userData['nombre'] = $row['nombre'];
                     $userData['apellido'] = $row['apellido'];
-                    $userData['foto'] = $row['foto'];
                     $userData['password$'] = $password;
-                    $userData['rol'] = $row['rol'];
+                    $isLogged = true;
                 }
     
                 include "loggednavbar.php";
             }
             else
             {
+                $isLogged = false;
                 include "defaultnavbar.php";
             }
         ?>
