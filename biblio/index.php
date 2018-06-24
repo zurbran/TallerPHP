@@ -67,7 +67,7 @@
     }
 
     if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
-        $query= "SELECT l.autores_id, l.id, l.titulo, a.nombre, a.apellido, o.ultimo_estado, o.fecha_ultima_modificacion, u.nombre AS username, u.apellido AS userlastname FROM operaciones o INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id INNER JOIN usuarios u ON o.lector_id = u.id";
+        $query= "SELECT l.autores_id, l.id, l.titulo, a.nombre, a.apellido, o.ultimo_estado, o.fecha_ultima_modificacion, u.nombre AS username, u.apellido AS userlastname, u.id AS userid FROM operaciones o INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id INNER JOIN usuarios u ON o.lector_id = u.id";
     }else{
         $query= "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
     }
@@ -175,9 +175,9 @@
                         <td><?= $results->data[$i]["ultimo_estado"] ?></td>
                         <td><?= $results->data[$i]["fecha_ultima_modificacion"] ?></td>
                         <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
-                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["id"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
+                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
                         <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
-                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["id"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
+                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
                         <?php else : ?>
                                 <td></td>
                         <?php endif; ?>
