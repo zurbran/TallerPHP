@@ -244,7 +244,8 @@
                         </tr>
                     </thead>
                     
-                    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST')
+                    <?php 
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST')
                         {
                             $isPost = true;
                             if(isset($_POST['bookId']))
@@ -255,6 +256,21 @@
                             else
                             {
                                 $bookid = NULL;
+                            }
+                        }
+                        if ($isLogged)
+                        {
+                            $stmt = $pdoconn->prepare("SELECT lector_id, COUNT(*) AS totalreservado from operaciones where lector_id= :userid AND NOT ultimo_estado='DEVUELTO' GROUP BY lector_id");
+                            $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                            $stmt->execute();
+                            $row = $stmt->fetch();
+                            if($row['totalreservado']>=3)
+                            {
+                                $hasReachedLimit = true;
+                            }
+                            else
+                            {
+                                $hasReachedLimit = false;
                             }
                         }
                     ?>
@@ -273,7 +289,7 @@
                             $prestados = $results->data[$i]["prestados"];
                             $reservados = $results->data[$i]["reservados"];
                             $disponibles = $total - $prestados - $reservados;
-                            if($isLogged)
+                            if(($isLogged)&&(!$hasReachedLimit))
                             {
                                 $stmt = $pdoconn->prepare("SELECT * FROM operaciones WHERE lector_id=:userid AND libros_id=:bookid AND NOT ultimo_estado='DEVUELTO'");
                                 $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
@@ -325,7 +341,7 @@
                             ?>
                         <td><?=$stockString?></td>
                         <?php if($isLogged) : ?>
-                            <?php if(($disponibles > 0)&&(!$hasBook[$i])) : ?>
+                            <?php if(($disponibles > 0)&&(!$hasReachedLimit)&&(!$hasBook[$i])) : ?>
                                 <td><button type="button" onclick="reservate(<?=$results->data[$i]["id"]?>)" id="reserve<?=$results->data[$i]["id"]?>" class="btn btn-dark" >Reservar</button></td>
                             <?php else : ?>
                                 <td></td>
