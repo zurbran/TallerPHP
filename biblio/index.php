@@ -65,14 +65,14 @@
     }
 
     if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
-        $query= "SELECT l.autores_id, l.id, l.titulo, a.nombre, a.apellido, o.ultimo_estado, o.fecha_ultima_modificacion, u.nombre AS username, u.apellido AS userlastname FROM operaciones o INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id INNER JOIN usuarios u ON o.lector_id = u.id WHERE o.ultimo_estado = 'RESERVADO' OR o.ultimo_estado = 'PRESTADO'";
+        $query= "SELECT l.autores_id, l.id, l.titulo, a.nombre, a.apellido, o.ultimo_estado, o.fecha_ultima_modificacion, u.nombre AS username, u.apellido AS userlastname FROM operaciones o INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id INNER JOIN usuarios u ON o.lector_id = u.id";
     }else{
         $query= "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
     }
     $Paginator  = new Paginator( $pdoconn, $query, $sort, $order );
 
     if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
-        $results= $Paginator->getRequestedOperations($limit , $page, $author, $tittle);
+        $results= $Paginator->getRequestedOperations($limit , $page, $author, $tittle);            
     }else{
         $results= $Paginator->getData($limit , $page, $author, $tittle);
     }
@@ -113,20 +113,20 @@
                         <label for="autorbusqueda">Autor</label>
                         <input type="search" id="autorbusqueda" class="form-control" placeholder="Ingrese el autor el cual buscar" name="searchA" value= "<?= $author?>">
                         </div>
-                        <div class="form-group">
-                        <label for="lectorbusqueda">Lector</label>
-                        <input type="search" id="lectorbusqueda" class="form-control" placeholder="Ingrese el lector el cual buscar" name="searchL" value= "<?= $reader?>">
-                        </div>
 
                         <?php if($isLogged){
                             if($userData['rol'] == 'BIBLIOTECARIO') : ?>
+                            <div class="form-group">
+                            <label for="lectorbusqueda">Lector</label>
+                            <input type="search" id="lectorbusqueda" class="form-control" placeholder="Ingrese el lector el cual buscar" name="searchL" value= "<?= $reader?>">
+                            </div>
                             <div class="form-group">
                             <label for="fechadesde">Fecha desde:</label>
                             <input type="date" id="fechadesde" class="form-control" name="fdesde">
                             </div>
                             <div class="form-group">
                             <label for="fechahasta">Fecha hasta:</label>
-                            <input type="date" id="fechahasta" class="form-control" name="fhasta">
+                            <input type="date" id="fechahasta" class="form-control" value= "<?= date("Y-m-d")?>" name="fhasta">
                             </div>
                         <?php endif; } ?>  
                         <button type="submit" class="btn btn-primary">Buscar</button>
@@ -158,6 +158,7 @@
                         <th scope="col">Lector</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Fecha</th>
+                        <th scope="col">Acción</th>
                         </tr>
                     </thead>
 

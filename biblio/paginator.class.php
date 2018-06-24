@@ -119,26 +119,62 @@ public function getData( $limit, $page, $author, $title) {
     return $result;
 }
 
+private function totalOperations($author, $title){
+    $this->_query .= " WHERE (o.ultimo_estado = 'RESERVADO' OR o.ultimo_estado = 'PRESTADO')";
+    if(!empty($author)||!empty($title))
+    {
+        if(!empty($author))
+        {
+            $this->_query .= ' AND ((CONCAT(a.nombre, " ", a.apellido) LIKE :searchAn OR CONCAT(a.apellido, " ", a.nombre) LIKE :searchAa))';
+            if(!empty($title))
+            {
+                $this->_query .= " AND (l.titulo LIKE :searchT)";
+                $this->_statement = $this->_conn->prepare($this->_query);
+                $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
+            }
+            else
+            {
+                $this->_statement = $this->_conn->prepare($this->_query);
+            }
+            $this->_statement->bindValue(':searchAa', '%'.$author.'%', PDO::PARAM_STR);
+            $this->_statement->bindValue(':searchAn', '%'.$author.'%', PDO::PARAM_STR);
+        }
+        else
+        {
+            $this->_query .= " AND (l.titulo LIKE :searchT)";
+            $this->_statement = $this->_conn->prepare($this->_query);
+            $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
+        }
+    }else{
+        $this->_statement = $this->_conn->prepare($this->_query);
+    }
+
+    $this->_statement->execute();
+    return $this->_statement->rowCount();
+}
+
 public function getRequestedOperations($limit, $page, $author, $title){
-    $this->_total = $this->totalRows($author, $title);
+    $this->_total = $this->totalOperations($author, $title);
 
     if($this->_total == 0)
     {
         return NULL;
     }
-    $this->_limit   = $limit;
+    $this->_limit   = $limit*2;
     $this->_page    = $page;
 
-    $this->_query .= " ORDER BY o.fecha_ultima_modificacion";
+    $this->_query .= " ORDER BY o.fecha_ultima_modificacion DESC";
 
     if ( $this->_limit == 'all' ) {
         $query      = $this->_query;
     } else {
         $query      = $this->_query . " LIMIT :floorlimit, :rooflimit";
     }
+
+    $this->_statement = $this->_conn->prepare($query);
     $this->_statement->bindValue(':floorlimit', (int) ( ( $this->_page - 1 ) * $this->_limit ), PDO::PARAM_INT);
     $this->_statement->bindValue(':rooflimit', (int) $this->_limit, PDO::PARAM_INT);
-
+    
     if(!empty($title))
     {
         $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
