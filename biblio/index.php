@@ -266,7 +266,7 @@
                         <td><?=$stockString?></td>
                         <?php if($isLogged) : ?>
                             <?php if(($disponibles > 0)&&(!$hasBook[$i])) : ?>
-                                <td><button type="button" onclick="reservate(<?=$results->data[$i]["id"]?>)" id="reserve" class="btn btn-dark" >Reservar</button></td>
+                                <td><button type="button" onclick="reservate(<?=$results->data[$i]["id"]?>,<?=$page?>,<?=$sort?>,<?=$order?>,<?=$tittle?>,<?=$author?>)" id="reserve<?=$results->data[$i]["id"]?>" class="btn btn-dark" >Reservar</button></td>
                             <?php else : ?>
                                 <td></td>
                             <?php endif; ?>  

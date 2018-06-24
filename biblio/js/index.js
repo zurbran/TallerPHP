@@ -17,9 +17,11 @@ function post(path, param, method) {
     form.submit();
 }
 
-function reservate(id)
+function reservate(id,page,sort,order,tittle,author)
 {
-    post("/index.php",id,"post");
+    window.alert("/index.php?page="+page+"&sort="+sort+"&order="+order+"&searchT="+tittle+"&searchA="+author);
+    post("/index.php?page="+page+"&sort="+sort+"&order="+order+"&searchT="+tittle+"&searchA="+author,id,"post");
+    $("reserve"+id).button('dispose')
 }
 
 function borrow(id)
