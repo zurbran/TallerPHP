@@ -260,6 +260,37 @@
                         }
                         if ($isLogged)
                         {
+                            if($isPost)
+                            {
+                                $stmt = $pdoconn->prepare("SELECT * FROM operaciones WHERE lector_id=:userid AND libros_id=:bookid AND NOT ultimo_estado='DEVUELTO'");
+                                $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                $stmt->bindValue(':bookid', (int) $bookid, PDO::PARAM_INT);
+                                $stmt->execute();
+                                if($stmt->rowCount() == 0)
+                                {
+                                    $stmt = $pdoconn->prepare("SELECT  l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id=:bookid AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id=:bookidd  AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l WHERE l.id=:bookiddd");
+                                    $stmt->bindValue(':bookid', (int) $bookid, PDO::PARAM_INT);
+                                    $stmt->bindValue(':bookidd', (int) $bookid, PDO::PARAM_INT);
+                                    $stmt->bindValue(':bookiddd', (int) $bookid, PDO::PARAM_INT);
+                                    $stmt->execute();
+                                    $row = $stmt->fetch();
+                                    $total = $row["cantidad"];
+                                    $prestados = $row["prestados"];
+                                    $reservados = $row["reservados"];
+                                    $disponibles = $total - $prestados - $reservados;
+                                    if($disponibles > 0)
+                                    {
+                                        $dateString = date("Y:m:d");
+                                        $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO', :currentDate , :userid , :bookid)");
+                                        $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
+                                        $stmt->bindValue(':bookid', (int) $bookid, PDO::PARAM_INT);
+                                        $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                        $stmt->execute();
+                                    }
+
+                                }
+
+                            }
                             $stmt = $pdoconn->prepare("SELECT lector_id, COUNT(*) AS totalreservado from operaciones where lector_id= :userid AND NOT ultimo_estado='DEVUELTO' GROUP BY lector_id");
                             $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
                             $stmt->execute();
@@ -289,6 +320,14 @@
                             $prestados = $results->data[$i]["prestados"];
                             $reservados = $results->data[$i]["reservados"];
                             $disponibles = $total - $prestados - $reservados;
+                            if(($isPost))
+                            {
+                                if($bookid == $results->data[$i]['id'])
+                                {
+                                    $disponibles--;
+                                    $reservados++;
+                                }
+                            }
                             if(($isLogged)&&(!$hasReachedLimit))
                             {
                                 $stmt = $pdoconn->prepare("SELECT * FROM operaciones WHERE lector_id=:userid AND libros_id=:bookid AND NOT ultimo_estado='DEVUELTO'");
@@ -302,18 +341,6 @@
                                 else
                                 {
                                     $hasBook[$i] = true;
-                                }
-                                if (($isPost)&&($disponibles > 0)&&($bookid == $results->data[$i]["id"])&&(!$hasBook[$i]))
-                                {
-                                    $dateString = date("Y:m:d");
-                                    $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO', :currentDate , :userid , :bookid)");
-                                    $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
-                                    $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
-                                    $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
-                                    $stmt->execute();
-                                    $hasBook[$i] = true;
-                                    $disponibles--;
-                                    $reservados++;
                                 }
                             }
                             $stockString = $total . "(";
