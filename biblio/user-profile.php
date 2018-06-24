@@ -54,7 +54,6 @@
         $userData['nombre'] = $row['nombre'];
         $userData['apellido'] = $row['apellido'];
         $userData['foto'] = $row['foto'];
-        $userData['password$'] = $password;
         $userData['rol'] = $row['rol'];
     }
 
@@ -72,17 +71,58 @@
 
     <div class="container-fluid fill-height">
         <div class="row">
+        <?php include "loggednavbar.php"; ?>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+            <img class="logo" src="img/logo-transparente.png" alt="logounlp">
+            </div>
+        </div>
+        <hr/>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p class='h1'> Mi Perfil </p>
+                <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <p> Nombre: </p>
+                    </div>
+                    <div class="row">
+                        <p> Apellido: </p>
+                    </div>
+                    <div class="row">
+                        <p> Email: </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <p> <?= $userData['nombre']?> </p>
+                    </div>
+                    <div class="row">
+                        <p> <?= $userData['apellido']?> </p>
+                    </div>
+                    <div class="row">
+                    <p> <?= $userData['email']?> </p>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                    <?php
+                        $image_data = $userData['foto'];
+                        $encoded_image = base64_encode($image_data);
+                    ?>
+                    <img  src="data:image/jpg;base64,<?=$encoded_image?>" width='200' height='200' />
+            </div>
         </div>
         <?php
-            include "loggednavbar.php";
+            
 
             if($userData['rol'] == 'LECTOR')
             {
                 include "lector.php";
-            }
-            elseif($userData['rol'] == 'BIBLIOTECARIO')
-            {
-                include "bibliotecario.php";
             }
         ?>    
 

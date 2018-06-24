@@ -6,9 +6,7 @@
 
 		<div class="collapse navbar-collapse" id="indexnavbar">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active">
-					<a class="nav-link" href="#">Políticas <span class="sr-only"></span></a>
-				</li>
+				
 			</ul>
 			<span class="navbar-text">
     		Usuario conectado:

@@ -26,7 +26,7 @@
         require_once "pdo-connect.php";
         require_once 'paginator.class.php';
 
-        $links= isset( $_GET['links'] ) ? $_GET['links'] : 10;
+        $links= isset( $_GET['links'] ) ? $_GET['links'] : 8;
         $authorId = isset($_GET['author_id']) ? $_GET['author_id'] : NULL;
         if($authorId == NULL)
         {
@@ -131,17 +131,9 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-2">
-            </div>
-            <div class="col-md-3">
-            </div>
-            <div class="col-md-3">
-                   <?php
-                    $writerPaginator->createAuthorLinks( $links, 'pagination','indexpages', $authorId, $name);
-                   ?>
-            </div>
-            <div class="col-md-4">
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <?php $writerPaginator->createAuthorLinks( $links, 'pagination','indexpages', $authorId, $name);?>
             </div>
         </div>
     </div>

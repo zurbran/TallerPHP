@@ -119,6 +119,51 @@ public function getData( $limit, $page, $author, $title) {
     return $result;
 }
 
+public function getRequestedOperations($limit, $page, $author, $title){
+    $this->_total = $this->totalRows($author, $title);
+
+    if($this->_total == 0)
+    {
+        return NULL;
+    }
+    $this->_limit   = $limit;
+    $this->_page    = $page;
+
+    $this->_query .= " ORDER BY o.fecha_ultima_modificacion";
+
+    if ( $this->_limit == 'all' ) {
+        $query      = $this->_query;
+    } else {
+        $query      = $this->_query . " LIMIT :floorlimit, :rooflimit";
+    }
+    $this->_statement->bindValue(':floorlimit', (int) ( ( $this->_page - 1 ) * $this->_limit ), PDO::PARAM_INT);
+    $this->_statement->bindValue(':rooflimit', (int) $this->_limit, PDO::PARAM_INT);
+
+    if(!empty($title))
+    {
+        $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
+    }
+    if(!empty($author))
+    {
+        $this->_statement->bindValue(':searchAa', '%'.$author.'%', PDO::PARAM_STR);
+        $this->_statement->bindValue(':searchAn', '%'.$author.'%', PDO::PARAM_STR);
+    }
+
+    $this->_statement->execute();
+
+    while ( $row =  $this->_statement->fetch(PDO::FETCH_ASSOC) ) {
+        $results[]  = $row;
+    }
+ 
+    $result         = new stdClass();
+    $result->page   = $this->_page;
+    $result->limit  = $this->_limit;
+    $result->total  = $this->_total;
+    $result->data   = $results;
+    
+    return $result;
+}
+
 private function totalHistoryRows($id){
     $this->_statement = $this->_conn->prepare($this->_query);
     $this->_statement->bindValue(':userid', (int) $id, PDO::PARAM_INT);
