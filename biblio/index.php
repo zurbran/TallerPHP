@@ -20,6 +20,8 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap.js"></script>
 
+    <script src="js/index.js"></script>
+
     <?php
     require_once "pdo-connect.php";
     require_once 'paginator.class.php';
@@ -183,14 +185,17 @@
                         <th scope="col"><a href="/index.php?sort=0&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Titulo</a></th>
                         <th scope="col"><a href="/index.php?sort=2&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Autor</a></th>
                         <th scope="col">Ejemplares</th>
+                        <?php if($isLogged) : ?>
+                            <th scope="col">Accion</th>
+                        <?php endif; ?>
                         </tr>
                     </thead>
 
                     <tbody>
                     <?php
-                            for( $i = 0; $i < count( $results->data ); $i++ ) :
-                                $image_data = $results->data[$i]["portada"];
-                                $encoded_image = base64_encode($image_data);
+                        for( $i = 0; $i < count( $results->data ); $i++ ) :
+                            $image_data = $results->data[$i]["portada"];
+                            $encoded_image = base64_encode($image_data);
                     ?>
                         <tr>
                         <th scope="row"><a href='/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><img  src="data:image/jpg;base64,<?=$encoded_image?>" width='200' height='200' /> </a></th>
@@ -201,6 +206,32 @@
                             $prestados = $results->data[$i]["prestados"];
                             $reservados = $results->data[$i]["reservados"];
                             $disponibles = $total - $prestados - $reservados;
+                            if($isLogged)
+                            {
+                                $stmt = $pdoconn->prepare("SELECT * FROM operaciones WHERE lector_id=:userid AND libros_id=:bookid AND NOT ultimo_estado='DEVUELTO'");
+                                $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
+                                $stmt->execute();
+                                if($stmt->rowCount() == 0)
+                                {
+                                    $hasBook[$i] = false;
+                                }
+                                else
+                                {
+                                    $hasBook[$i] = true;
+                                }
+                                if (($_SERVER['REQUEST_METHOD'] === 'POST')&&($disponibles > 0)&&(isset($_POST['bookId']))&&($_POST['bookId']==$results->data[$i]["id"])&&(!$hasBook[$i]))
+                                {
+                                    $dateString = date("Y:m:d");
+                                    $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO','".$dateString."', :userid , :bookid)");
+                                    $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
+                                    $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                    $stmt->execute();
+                                    $hasBook[$i] = false;
+                                    $disponibles--;
+                                    $reservados++;
+                                }
+                            }
                             $stockString = $total . "(";
                             if($disponibles > 0)
                             {
@@ -223,12 +254,17 @@
                                 $stockString .= $reservados . " reservados";
                             }
                             $stockString .= ") </td>";
-                        ?>
+                            ?>
                         <td><?=$stockString?></td>
+                        <?php if($isLogged) : ?>
+                            <?php if(($disponibles > 0)&&(!$hasBook[$i])) : ?>
+                                <td><button type="button" onclick="reservate(<?=$results->data[$i]["id"]?>)" id="reserve" class="btn btn-dark" >Reservar</button></td>
+                            <?php else : ?>
+                                <td></td>
+                            <?php endif; ?>  
+                        <?php endif; ?>
                         </tr>
-                    <?php
-                        endfor;
-                    ?>
+                        <?php endfor; ?>
                     </tbody>
                 </table>
             <?php endif; ?>                  
