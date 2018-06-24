@@ -120,7 +120,7 @@ public function getData( $limit, $page, $author, $title) {
 }
 
 private function totalOperations($author, $title, $reader, $fromdate, $todate){
-    $this->_query .= ' WHERE (o.ultimo_estado = "RESERVADO" OR o.ultimo_estado = "PRESTADO") AND ((CONCAT(a.nombre, " ", a.apellido) LIKE :searchAn) OR (CONCAT(a.apellido, " ", a.nombre) LIKE :searchAa)) AND (l.titulo LIKE :searchT) AND ((CONCAT(u.nombre, " ", u.apellido) LIKE :searchLn) OR (CONCAT(u.apellido, " ", u.nombre) LIKE :searchLa)) AND (o.fecha_ultima_modificacion >= :datefromfilter) AND (o.fecha_ultima_modificacion <= :datetofilter)';
+    $this->_query .= ' WHERE ((CONCAT(a.nombre, " ", a.apellido) LIKE :searchAn) OR (CONCAT(a.apellido, " ", a.nombre) LIKE :searchAa)) AND (l.titulo LIKE :searchT) AND ((CONCAT(u.nombre, " ", u.apellido) LIKE :searchLn) OR (CONCAT(u.apellido, " ", u.nombre) LIKE :searchLa)) AND (o.fecha_ultima_modificacion >= :datefromfilter) AND (o.fecha_ultima_modificacion <= :datetofilter)';
     $this->_statement = $this->_conn->prepare($this->_query);
 
     if(empty($author))
@@ -229,6 +229,59 @@ public function getReaderHistory($limit, $page, $id){
     $result->data   = $results;
     
     return $result;
+}
+
+public function createBiblioLinks( $links, $list_class, $paginatorlabel, $tittle, $author, $reader, $fromdate, $todate) {
+    if ( $this->_limit == 'all' ) {
+        return '';
+    }
+ 
+    $last       = ceil( $this->_total / $this->_limit );
+ 
+    $start      = ( ( $this->_page - $links ) > 2 ) ? $this->_page - $links : 1;
+    $end        = ( ( $this->_page + $links ) < $last-1 ) ? $this->_page + $links : $last;
+    $class      = ( $this->_page == 1 ) ? "page-item disabled" : "page-item";
+    $aclass     = "page-link";
+    ?>
+    <nav aria-label='<?=$paginatorlabel?>'>
+        <ul class='<?=$list_class?>'>
+            <li class='<?=$class?>'>
+                <a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&searchL=<?=$reader?>&datefrom=<?=$fromdate?>&dateuntil=<?=$todate?>&order=<?=$this->_order?>&limit=<?$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=($this->_page - 1 )?>">Anterior</a>
+            </li>
+    <?php
+    if ( $start > 1 ) 
+    {?>
+        <li><a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&searchL=<?=$reader?>&datefrom=<?=$fromdate?>&dateuntil=<?=$todate?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=1">1</a></li>
+        <li class="page-item disabled"><span>...</span></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    for ( $i = $start ; $i <= $end; $i++ ) {
+        $class  = ( $this->_page == $i ) ? "page-item active" : "page-item";
+    ?>
+        <li class='<?=$class?>'><a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&searchL=<?=$reader?>&datefrom=<?=$fromdate?>&dateuntil=<?=$todate?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=$i?>"><?=$i?></a></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    if ( $end < $last ) {
+    ?>
+        <li class="page-item disabled"><span>...</span></li>
+        <li><a class="<?=$aclass?>" href="?sort=<?=$this->_sort?>&searchL=<?=$reader?>&datefrom=<?=$fromdate?>&dateuntil=<?$todate?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=$last?>"><?=$last?></a></li>
+    <?php
+    }
+    ?>
+ 
+    <?php
+    $class      = ( $this->_page == $last ) ? "page-item disabled" : "page-item";
+    ?>
+    <li class="<?=$class?>"><a class="<?=$aclass?>" href="?sort=<?=$this->_sort?>&searchL=<?=$reader?>&datefrom=<?=$fromdate?>&dateuntil=<?=$todate?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=( $this->_page + 1 )?>">Siguiente</a></li>
+    </ul>
+    </nav>
+<?php
 }
 
 public function createLinks( $links, $list_class, $paginatorlabel, $tittle, $author) {
