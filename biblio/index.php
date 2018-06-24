@@ -38,6 +38,7 @@
     $fromdate = isset($_GET['datefrom']) ? $_GET['datefrom'] : '';
     $todate = isset($_GET['dateuntil']) ? $_GET['dateuntil'] : date("Y-m-d");
     $pdoconn = $pdo;
+    $isPost = false;
 
     if((isset($_SESSION['email']))&&(isset($_SESSION['password'])))
     {
@@ -164,6 +165,24 @@
                         </tr>
                     </thead>
 
+                    <?php if (($_SERVER['REQUEST_METHOD'] === 'POST'))
+                        {
+                            $isPost = true;
+                            if (isset($_POST['bookId'])&&isset($_POST['userId'])&&isset($_POST['operation']))
+                            {
+                                $bookid = $_POST['bookId'];
+                                $userid = $_POST['userId'];
+                                $op = $_POST['operation'];
+                            }
+                            else
+                            {
+                                $bookid = NULL;
+                                $userid = NULL;
+                                $op = NULL;
+                            }
+                        } 
+                    ?>
+
                     <tbody>
                     <?php
                         for( $i = 0; $i < count( $results->data ); $i++ ) :
@@ -174,13 +193,14 @@
                         <td><?= $results->data[$i]["username"].' '.$results->data[$i]["userlastname"] ?></td>
                         <td><?= $results->data[$i]["ultimo_estado"] ?></td>
                         <td><?= $results->data[$i]["fecha_ultima_modificacion"] ?></td>
-                        <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
-                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
-                        <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
-                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
-                        <?php else : ?>
-                                <td></td>
-                        <?php endif; ?>
+                        
+                                    <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
+                                        <td><button type="button" onclick="borrow(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
+                                    <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
+                                        <td><button type="button" onclick="takeback(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
+                                    <?php else : ?>
+                                            <td></td>
+                                    <?php endif; ?>
                         </tr>
                     <?php
                         endfor;
@@ -200,7 +220,21 @@
                         <?php endif; ?>
                         </tr>
                     </thead>
-
+                    
+                    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST')
+                        {
+                            $isPost = true;
+                            if(isset($_POST['bookId']))
+                            {
+                                $bookid = $_POST['bookId'];
+                                $settedParams = true;
+                            }
+                            else
+                            {
+                                $bookid = NULL;
+                            }
+                        }
+                    ?>
                     <tbody>
                     <?php
                         for( $i = 0; $i < count( $results->data ); $i++ ) :
@@ -230,14 +264,14 @@
                                 {
                                     $hasBook[$i] = true;
                                 }
-                                if (($_SERVER['REQUEST_METHOD'] === 'POST')&&($disponibles > 0)&&(isset($_POST['bookId']))&&($_POST['bookId']==$results->data[$i]["id"])&&(!$hasBook[$i]))
+                                if (($isPost)&&($disponibles > 0)&&($bookid == $results->data[$i]["id"])&&(!$hasBook[$i]))
                                 {
                                     $dateString = date("Y:m:d");
                                     $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO','".$dateString."', :userid , :bookid)");
                                     $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
                                     $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
                                     $stmt->execute();
-                                    $hasBook[$i] = false;
+                                    $hasBook[$i] = true;
                                     $disponibles--;
                                     $reservados++;
                                 }
