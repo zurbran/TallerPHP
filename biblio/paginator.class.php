@@ -13,7 +13,6 @@ class Paginator {
     private $_sort;
     private $_order;
     private $_fromdate;
- 
 
 public function __construct( $conn, $query, $sort, $order ) {
      
@@ -120,8 +119,8 @@ public function getData( $limit, $page, $author, $title) {
     return $result;
 }
 
-private function totalOperations2($author, $title, $reader, $fromdate){
-    $this->_query .= ' WHERE (o.ultimo_estado = "RESERVADO" OR o.ultimo_estado = "PRESTADO") AND ((CONCAT(a.nombre, " ", a.apellido) LIKE :searchAn) OR (CONCAT(a.apellido, " ", a.nombre) LIKE :searchAa)) AND (l.titulo LIKE :searchT) AND ((CONCAT(u.nombre, " ", u.apellido) LIKE :searchLn) OR (CONCAT(u.apellido, " ", u.nombre) LIKE :searchLa)) AND (o.fecha_ultima_modificacion >= :datefromfilter)';
+private function totalOperations($author, $title, $reader, $fromdate, $todate){
+    $this->_query .= ' WHERE (o.ultimo_estado = "RESERVADO" OR o.ultimo_estado = "PRESTADO") AND ((CONCAT(a.nombre, " ", a.apellido) LIKE :searchAn) OR (CONCAT(a.apellido, " ", a.nombre) LIKE :searchAa)) AND (l.titulo LIKE :searchT) AND ((CONCAT(u.nombre, " ", u.apellido) LIKE :searchLn) OR (CONCAT(u.apellido, " ", u.nombre) LIKE :searchLa)) AND (o.fecha_ultima_modificacion >= :datefromfilter) AND (o.fecha_ultima_modificacion <= :datetofilter)';
     $this->_statement = $this->_conn->prepare($this->_query);
 
     if(empty($author))
@@ -130,57 +129,24 @@ private function totalOperations2($author, $title, $reader, $fromdate){
         $title = '%';
     if(empty($reader))
         $reader = '%';
-    if(empty($fromdate)){
-        $fromdate = '2018-06-01';
-        $this->_fromdate = $fromdate;
-    }
+    if(empty($fromdate))
+        $fromdate = '1999-12-31';
+
+    $this->_fromdate = $fromdate;
 
     $this->_statement->bindValue(':searchAn', '%'.$author.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':searchAa', '%'.$author.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':searchLn', '%'.$reader.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':searchLa', '%'.$reader.'%', PDO::PARAM_STR);
-    $this->_statement->bindValue(':datefromfilter', '%'.$fromdate.'%', PDO::PARAM_STR);
+    $this->_statement->bindValue(':datefromfilter', $fromdate, PDO::PARAM_STR);
+    $this->_statement->bindValue(':datetofilter', $todate, PDO::PARAM_STR);
     $this->_statement->execute();
     return $this->_statement->rowCount();
 }
 
-private function totalOperations($author, $title, $reader){
-    $this->_query .= " WHERE (o.ultimo_estado = 'RESERVADO' OR o.ultimo_estado = 'PRESTADO')";
-    if(!empty($author)||!empty($title))
-    {
-        if(!empty($author))
-        {
-            $this->_query .= ' AND ((CONCAT(a.nombre, " ", a.apellido) LIKE :searchAn OR CONCAT(a.apellido, " ", a.nombre) LIKE :searchAa))';
-            if(!empty($title))
-            {
-                $this->_query .= " AND (l.titulo LIKE :searchT)";
-                $this->_statement = $this->_conn->prepare($this->_query);
-                $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
-            }
-            else
-            {
-                $this->_statement = $this->_conn->prepare($this->_query);
-            }
-            $this->_statement->bindValue(':searchAa', '%'.$author.'%', PDO::PARAM_STR);
-            $this->_statement->bindValue(':searchAn', '%'.$author.'%', PDO::PARAM_STR);
-        }
-        else
-        {
-            $this->_query .= " AND (l.titulo LIKE :searchT)";
-            $this->_statement = $this->_conn->prepare($this->_query);
-            $this->_statement->bindValue(':searchT', '%'.$title.'%', PDO::PARAM_STR);
-        }
-    }else{
-        $this->_statement = $this->_conn->prepare($this->_query);
-    }
-
-    $this->_statement->execute();
-    return $this->_statement->rowCount();
-}
-
-public function getRequestedOperations($limit, $page, $author, $title, $reader, $fromdate){
-    $this->_total = $this->totalOperations2($author, $title, $reader, $fromdate);
+public function getRequestedOperations($limit, $page, $author, $title, $reader, $fromdate, $todate){
+    $this->_total = $this->totalOperations($author, $title, $reader, $fromdate, $todate);
 
     if($this->_total == 0)
     {
@@ -205,7 +171,8 @@ public function getRequestedOperations($limit, $page, $author, $title, $reader, 
     $this->_statement->bindValue(':searchAn', '%'.$author.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':searchLn', '%'.$reader.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':searchLa', '%'.$reader.'%', PDO::PARAM_STR);
-    $this->_statement->bindValue(':datefromfilter', '%'.$this->_fromdate.'%', PDO::PARAM_STR);
+    $this->_statement->bindValue(':datefromfilter',$this->_fromdate, PDO::PARAM_STR);
+    $this->_statement->bindValue(':datetofilter', $todate, PDO::PARAM_STR);
     $this->_statement->execute();
 
     while ( $row =  $this->_statement->fetch(PDO::FETCH_ASSOC) ) {
