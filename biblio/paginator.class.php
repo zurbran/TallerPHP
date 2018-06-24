@@ -152,7 +152,8 @@ public function getRequestedOperations($limit, $page, $author, $title, $reader, 
     {
         return NULL;
     }
-    $this->_limit   = $limit*2;
+    
+    $this->_limit   = $limit;
     $this->_page    = $page;
 
     $this->_query .= " ORDER BY o.fecha_ultima_modificacion DESC";

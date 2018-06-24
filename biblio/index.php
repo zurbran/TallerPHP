@@ -321,6 +321,7 @@
             <div class="col-md-auto">
                 <?php 
                    if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
+                    
                     $Paginator->createBiblioLinks( $links, 'pagination', 'indexpages', $tittle, $author, $reader, $fromdate, $todate);
                     }else{
                     $Paginator->createLinks( $links, 'pagination','indexpages', $tittle, $author);
