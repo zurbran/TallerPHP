@@ -247,7 +247,7 @@ public function createBiblioLinks( $links, $list_class, $paginatorlabel, $tittle
     <nav aria-label='<?=$paginatorlabel?>'>
         <ul class='<?=$list_class?>'>
             <li class='<?=$class?>'>
-                <a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&searchL=<?=$reader?>&datefrom=<?=$fromdate?>&dateuntil=<?=$todate?>&order=<?=$this->_order?>&limit=<?$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=($this->_page - 1 )?>">Anterior</a>
+                <a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&searchL=<?=$reader?>&datefrom=<?=$fromdate?>&dateuntil=<?=$todate?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=($this->_page - 1 )?>">Anterior</a>
             </li>
     <?php
     if ( $start > 1 ) 
@@ -300,7 +300,7 @@ public function createLinks( $links, $list_class, $paginatorlabel, $tittle, $aut
     <nav aria-label='<?=$paginatorlabel?>'>
         <ul class='<?=$list_class?>'>
             <li class='<?=$class?>'>
-                <a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?$this->_limit?>&searchA=<?$author?>&searchT=<?$tittle?>&page=<?=($this->_page - 1 )?>">Anterior</a>
+                <a class='<?=$aclass?>' href="?sort=<?=$this->_sort?>&order=<?=$this->_order?>&limit=<?=$this->_limit?>&searchA=<?=$author?>&searchT=<?=$tittle?>&page=<?=($this->_page - 1 )?>">Anterior</a>
             </li>
     <?php
     if ( $start > 1 ) 

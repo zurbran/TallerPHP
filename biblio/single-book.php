@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,6 +28,7 @@
         <?php
         require_once "pdo-connect.php";
 
+        $isLogged = false;
         $stmt= $pdo->prepare('SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, l.descripcion, l.id FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.id = :book');
         $stmt->execute([':book' => $_GET['libro_id']]);
 
@@ -38,7 +42,41 @@
     <div class="container-fluid fill-height">
         <div class="row">
             <?php
-                include "defaultnavbar.php";
+                if((isset($_SESSION['email']))&&(isset($_SESSION['password'])))
+                {
+                    $email = $_SESSION['email'];
+                    $password = $_SESSION['password'];
+            
+                    $stmt = $pdo->prepare('SELECT id, nombre, apellido, rol FROM usuarios WHERE email = :email AND clave = :password');
+                    $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+                    $stmt->bindValue(':password', $password, PDO::PARAM_STR);
+                    $stmt->execute();
+            
+                    if($stmt->rowCount() == 0)
+                    {
+                        session_destroy();
+                        throw new Exception("Credenciales invalidas.");
+                    }
+                    else
+                    {
+                        $row = $stmt->fetch();
+                        $userData['id'] = $row['id'];
+                        $userData['email'] = $email;
+                        $userData['nombre'] = $row['nombre'];
+                        $userData['apellido'] = $row['apellido'];
+                        $userData['password'] = $password;
+                        $userData['rol'] = $row['rol'];
+                        $isLogged = true;
+                    }
+                }
+                if($isLogged)
+                {
+                    include "loggednavbar.php";
+                }
+                else
+                {
+                    include "defaultnavbar.php";
+                }
             ?>
         </div>
 

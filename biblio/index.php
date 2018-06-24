@@ -52,6 +52,7 @@
 
         if($stmt->rowCount() == 0)
         {
+            session_destroy();
             throw new Exception("Credenciales invalidas.");
         }
         else
