@@ -21,3 +21,11 @@ function reservate(id)
 {
     post("/index.php",id,"post");
 }
+
+function borrow(id)
+{
+}
+
+function takeback(id)
+{
+}

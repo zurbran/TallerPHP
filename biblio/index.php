@@ -172,6 +172,13 @@
                         <td><?= $results->data[$i]["username"].' '.$results->data[$i]["userlastname"] ?></td>
                         <td><?= $results->data[$i]["ultimo_estado"] ?></td>
                         <td><?= $results->data[$i]["fecha_ultima_modificacion"] ?></td>
+                        <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
+                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["id"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
+                        <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
+                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["id"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
+                        <?php else : ?>
+                                <td></td>
+                        <?php endif; ?>
                         </tr>
                     <?php
                         endfor;
