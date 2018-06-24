@@ -35,6 +35,8 @@
     $tittle = isset($_GET['searchT']) ? $_GET['searchT'] : '';
     $author = isset($_GET['searchA']) ? $_GET['searchA'] : '';
     $reader = isset($_GET['searchL']) ? $_GET['searchL'] : '';
+    $reader = isset($_GET['searchL']) ? $_GET['searchL'] : '';
+    $fromdate = isset($_GET['datefrom']) ? $_GET['datefrom'] : '';
     $pdoconn = $pdo;
 
     if((isset($_SESSION['email']))&&(isset($_SESSION['password'])))
@@ -72,7 +74,7 @@
     $Paginator  = new Paginator( $pdoconn, $query, $sort, $order );
 
     if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
-        $results= $Paginator->getRequestedOperations($limit , $page, $author, $tittle);            
+        $results= $Paginator->getRequestedOperations($limit , $page, $author, $tittle, $reader, $fromdate);            
     }else{
         $results= $Paginator->getData($limit , $page, $author, $tittle);
     }
@@ -122,11 +124,12 @@
                             </div>
                             <div class="form-group">
                             <label for="fechadesde">Fecha desde:</label>
-                            <input type="date" id="fechadesde" class="form-control" name="fdesde">
+                            <?php echo $fromdate; ?>
+                            <input type="date" id="fechadesde" class="form-control" name="datefrom" value= "<?= $fromdate?>">
                             </div>
                             <div class="form-group">
                             <label for="fechahasta">Fecha hasta:</label>
-                            <input type="date" id="fechahasta" class="form-control" value= "<?= date("Y-m-d")?>" name="fhasta">
+                            <input type="date" id="fechahasta" class="form-control" value= "<?= date("Y-m-d")?>" name="dateuntil">
                             </div>
                         <?php endif; } ?>  
                         <button type="submit" class="btn btn-primary">Buscar</button>
