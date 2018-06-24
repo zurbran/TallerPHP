@@ -285,7 +285,13 @@
 
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
-                <?php $Paginator->createLinks( $links, 'pagination','indexpages', $tittle, $author);?>
+                <?php 
+                   if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
+                    $Paginator->createBiblioLinks( $links, 'pagination', 'indexpages', $tittle, $author, $reader, $fromdate, $todate);
+                    }else{
+                    $Paginator->createLinks( $links, 'pagination','indexpages', $tittle, $author);
+                    }
+                ?>
             </div>
         </div>
     </div>
