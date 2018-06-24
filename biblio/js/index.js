@@ -28,12 +28,12 @@ function reservate(id)
 
 function borrow(bookid,userid)
 {
-    var objBorrow = {bookId : bookId , userId : userid , operation : "borrow"};
+    var objBorrow = {bookId : bookid , userId : userid , operation : "borrow"};
     post("/index.php"+window.location.search,objBorrow,"post");
 }
 
 function takeback(bookid,userid)
 {
-    var objTakeBack = {bookId : bookId , userId : userid , operation : "takeback"};
+    var objTakeBack = {bookId : bookid , userId : userid , operation : "takeback"};
     post("/index.php"+window.location.search,objTakeBack,"post");
 }
