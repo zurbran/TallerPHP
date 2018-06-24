@@ -191,16 +191,39 @@
                         <td><a href='/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
                         <td><a href='/show-writers.php?author_id=<?=$results->data[$i]["autores_id"]?>&limit=5&page=1'><?=$results->data[$i]["nombre"]?> <?=$results->data[$i]["apellido"]?></a></td>
                         <td><?= $results->data[$i]["username"].' '.$results->data[$i]["userlastname"] ?></td>
+                        <?php if (($isPost)&&($bookid == $results->data[$i]["id"])&&($userid == $results->data[$i]["userid"]))
+                            {
+                                if(($op == "borrow")&&($results->data[$i]["ultimo_estado"] == 'RESERVADO'))
+                                {
+                                    $dateString = date("Y:m:d");
+                                    $stmt = $pdoconn->prepare("UPDATE operaciones SET ultimo_estado='PRESTADO', fecha_ultima_modificacion= :currentDate WHERE lector_id= :readerid AND libros_id= :bookid");
+                                    $stmt->bindValue(':readerid', (int) $results->data[$i]['userid'], PDO::PARAM_INT);
+                                    $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
+                                    $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
+                                    $stmt->execute();
+                                    $results->data[$i]["ultimo_estado"] = 'PRESTADO';
+                                }
+                                elseif (($op == "takeback")&&($results->data[$i]["ultimo_estado"] == 'PRESTADO'))
+                                {
+                                    $dateString = date("Y:m:d");
+                                    $stmt = $pdoconn->prepare("UPDATE operaciones SET ultimo_estado='DEVUELTO', fecha_ultima_modificacion= :currentDate WHERE lector_id= :readerid AND libros_id= :bookid");
+                                    $stmt->bindValue(':readerid', (int) $results->data[$i]['userid'], PDO::PARAM_INT);
+                                    $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
+                                    $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
+                                    $stmt->execute();
+                                    $results->data[$i]["ultimo_estado"] = 'DEVUELTO';
+                                }
+                            }
+                        ?>
                         <td><?= $results->data[$i]["ultimo_estado"] ?></td>
                         <td><?= $results->data[$i]["fecha_ultima_modificacion"] ?></td>
-                        
-                                    <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
-                                        <td><button type="button" onclick="borrow(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
-                                    <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
-                                        <td><button type="button" onclick="takeback(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
-                                    <?php else : ?>
-                                            <td></td>
-                                    <?php endif; ?>
+                        <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
+                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
+                        <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
+                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
+                        <?php else : ?>
+                                <td></td>
+                        <?php endif; ?>
                         </tr>
                     <?php
                         endfor;
@@ -267,7 +290,8 @@
                                 if (($isPost)&&($disponibles > 0)&&($bookid == $results->data[$i]["id"])&&(!$hasBook[$i]))
                                 {
                                     $dateString = date("Y:m:d");
-                                    $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO','".$dateString."', :userid , :bookid)");
+                                    $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO', :currentDate , :userid , :bookid)");
+                                    $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
                                     $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
                                     $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
                                     $stmt->execute();
