@@ -60,9 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     {
         $pass = $_POST['password'];
         $passconf = $_POST['password_confirmation'];
-        if(filter_var($pass,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/.{8}+/"))))
+        if(filter_var($pass,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$&*])(?=.*\d).{6,}$/"))))
         {
-            if(filter_var($passconf,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/.{8}+/"))))
+            if(filter_var($passconf,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$&*])(?=.*\d).{6,}$/"))))
             {
                 if(!strcmp($pass,$passconf))
                 {
@@ -80,11 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             else
             {
+                echo "El password no cumple con los criterios de seguridad.";
                 $validpass = false;
             }
         }
         else
         {
+            echo "El password no cumple con los criterios de seguridad.";
             $validpass = false;
         }
         

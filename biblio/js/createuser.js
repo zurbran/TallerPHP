@@ -51,6 +51,8 @@ function validateSurnameField (value){
 }
 
 function validatePasswordField (){
+    const validregex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$&*])(?=.*\d).{6,}$/gm;
+    $
     var pass = document.getElementById('password').value;
     var passconf = document.getElementById('password_confirmation').value;
 
@@ -69,15 +71,14 @@ function validatePasswordField (){
         }
         else
         {
-            var passlength = pass.length;
-            if(passlength >= 8)
+            if(validregex.test(pass))
             {
                 $('#alertpass').hide();
                 return 1;
             }
             else
             {
-                $('#alertpass').text("La contraseña contiene menos de 8 caracteres");
+                $('#alertpass').text("La contraseña contiene menos de 6 caracteres o no incluye al menos una letra Mayuscula o ningun simbolo (!@#$&*)");
                 $('#alertpass').show();
                 return 0;
             }
