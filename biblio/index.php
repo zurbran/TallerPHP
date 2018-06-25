@@ -69,7 +69,7 @@
     }
 
     if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
-        $query= "SELECT l.autores_id, l.id, l.titulo, a.nombre, a.apellido, o.ultimo_estado, o.fecha_ultima_modificacion, u.nombre AS username, u.apellido AS userlastname, u.id AS userid FROM operaciones o INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id INNER JOIN usuarios u ON o.lector_id = u.id";
+        $query= "SELECT l.autores_id, l.id, l.titulo, a.nombre, a.apellido, o.ultimo_estado, o.fecha_ultima_modificacion, u.nombre AS username, u.apellido AS userlastname, o.id AS operId FROM operaciones o INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id INNER JOIN usuarios u ON o.lector_id = u.id";
     }else{
         $query= "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
     }
@@ -169,16 +169,14 @@
                     <?php if (($_SERVER['REQUEST_METHOD'] === 'POST'))
                         {
                             $isPost = true;
-                            if (isset($_POST['bookId'])&&isset($_POST['userId'])&&isset($_POST['operation']))
+                            if (isset($_POST['opNum'])&&isset($_POST['operation']))
                             {
-                                $bookid = $_POST['bookId'];
-                                $userid = $_POST['userId'];
+                                $opid = $_POST['opNum'];
                                 $op = $_POST['operation'];
                             }
                             else
                             {
-                                $bookid = NULL;
-                                $userid = NULL;
+                                $opid = NULL;
                                 $op = NULL;
                             }
                         } 
@@ -192,14 +190,13 @@
                         <td><a href='/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
                         <td><a href='/show-writers.php?author_id=<?=$results->data[$i]["autores_id"]?>&limit=5&page=1'><?=$results->data[$i]["nombre"]?> <?=$results->data[$i]["apellido"]?></a></td>
                         <td><?= $results->data[$i]["username"].' '.$results->data[$i]["userlastname"] ?></td>
-                        <?php if (($isPost)&&($bookid == $results->data[$i]["id"])&&($userid == $results->data[$i]["userid"]))
+                        <?php if (($isPost)&&($opid == $results->data[$i]["operId"]))
                             {
                                 if(($op == "borrow")&&($results->data[$i]["ultimo_estado"] == 'RESERVADO'))
                                 {
                                     $dateString = date("Y:m:d");
-                                    $stmt = $pdoconn->prepare("UPDATE operaciones SET ultimo_estado='PRESTADO', fecha_ultima_modificacion= :currentDate WHERE lector_id= :readerid AND libros_id= :bookid");
-                                    $stmt->bindValue(':readerid', (int) $results->data[$i]['userid'], PDO::PARAM_INT);
-                                    $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
+                                    $stmt = $pdoconn->prepare("UPDATE operaciones SET ultimo_estado='PRESTADO', fecha_ultima_modificacion= :currentDate WHERE id= :operationid");
+                                    $stmt->bindValue(':operationid', $opid , PDO::PARAM_INT);
                                     $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
                                     $stmt->execute();
                                     $results->data[$i]["ultimo_estado"] = 'PRESTADO';
@@ -207,9 +204,8 @@
                                 elseif (($op == "takeback")&&($results->data[$i]["ultimo_estado"] == 'PRESTADO'))
                                 {
                                     $dateString = date("Y:m:d");
-                                    $stmt = $pdoconn->prepare("UPDATE operaciones SET ultimo_estado='DEVUELTO', fecha_ultima_modificacion= :currentDate WHERE lector_id= :readerid AND libros_id= :bookid");
-                                    $stmt->bindValue(':readerid', (int) $results->data[$i]['userid'], PDO::PARAM_INT);
-                                    $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
+                                    $stmt = $pdoconn->prepare("UPDATE operaciones SET ultimo_estado='DEVUELTO', fecha_ultima_modificacion= :currentDate WHERE id= :operationid ");
+                                    $stmt->bindValue(':operationid', $opid , PDO::PARAM_INT);
                                     $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
                                     $stmt->execute();
                                     $results->data[$i]["ultimo_estado"] = 'DEVUELTO';
@@ -219,9 +215,9 @@
                         <td><?= $results->data[$i]["ultimo_estado"] ?></td>
                         <td><?= $results->data[$i]["fecha_ultima_modificacion"] ?></td>
                         <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
-                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
+                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["operId"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
                         <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
-                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["id"]?>,<?=$results->data[$i]["userid"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
+                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["operId"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
                         <?php else : ?>
                                 <td></td>
                         <?php endif; ?>

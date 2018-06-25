@@ -26,14 +26,14 @@ function reservate(id)
     post("/index.php"+window.location.search,objReserve,"post");
 }
 
-function borrow(bookid,userid)
+function borrow(opid)
 {
-    var objBorrow = {bookId : bookid , userId : userid , operation : "borrow"};
+    var objBorrow = {opNum : opid , operation : "borrow"};
     post("/index.php"+window.location.search,objBorrow,"post");
 }
 
-function takeback(bookid,userid)
+function takeback(opid)
 {
-    var objTakeBack = {bookId : bookid , userId : userid , operation : "takeback"};
+    var objTakeBack = {opNum : opid , operation : "takeback"};
     post("/index.php"+window.location.search,objTakeBack,"post");
 }
