@@ -85,9 +85,20 @@ function validatePasswordField (){
     }
 }
 
+function fileValidation(){
+    var fileInput = document.getElementById('userpic');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(\.jpg|\.jpeg)$/i;
+    if(!allowedExtensions.exec(filePath)){
+        alert('Por favor inserte una imagen cuya extension sea JPEG o JPG.');
+        fileInput.value = '';
+        return false;
+    }
+}
+
 function validate(){
 
-    if((validateEmailField(document.getElementById('emailbox').value))&(validateNameField(document.getElementById('first_name').value))&((validateSurnameField(document.getElementById('last_name').value)))&(validatePasswordField())&(pictureFile != null))
+    if((fileValidation())&(validateEmailField(document.getElementById('emailbox').value))&(validateNameField(document.getElementById('first_name').value))&((validateSurnameField(document.getElementById('last_name').value)))&(validatePasswordField())&(pictureFile != null))
     {
         postForm();
     }

@@ -216,7 +216,7 @@ else{
                                 <input type="text" name="picturename" id="picturename" class="form-control input-lg" placeholder="Foto de Perfil" tabindex="3">
                             </div>
                             <div class="col-xs-6 col-sm-3 col-md-3">
-                                <input type="file" id="userpic" name="userpic" onchange="showFileName()" style="display: none;" />
+                                <input type="file" id="userpic" name="userpic" onchange="showFileName()" style="display: none;" data-type='image' accept="image/*"/>
                                 <label for="userpic" class="btn btn-success btn-block btn-md" id="picturelabel">
                                     Examinar
                                 </label>
