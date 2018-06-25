@@ -53,7 +53,8 @@
         if($stmt->rowCount() == 0)
         {
             session_destroy();
-            throw new Exception("Credenciales invalidas.");
+            $url = '/logerror.php';
+            header( "Location: $url" );
         }
         else
         {

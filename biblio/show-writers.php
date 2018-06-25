@@ -29,6 +29,7 @@
         require_once "pdo-connect.php";
         require_once 'paginator.class.php';
 
+        $isLogged = false;
         $links= isset( $_GET['links'] ) ? $_GET['links'] : 8;
         $authorId = isset($_GET['author_id']) ? $_GET['author_id'] : NULL;
         if($authorId == NULL)
