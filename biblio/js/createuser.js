@@ -94,6 +94,8 @@ function fileValidation(){
         alert('Por favor inserte una imagen cuya extension sea JPEG o JPG.');
         fileInput.value = '';
         return false;
+    }else{
+        return true;
     }
 }
 
