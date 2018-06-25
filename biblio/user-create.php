@@ -223,8 +223,8 @@ else{
                                     Examinar
                                 </label>
                             </div>
-                            <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertpic" role="alert" style="display:none;">
-                                Falta subir una foto de perfil
+                            <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertpicture" role="alert" style="display:none;">
+                                Por favor inserte una imagen cuya extension sea JPEG o JPG
                             </div>
                             <!-- <div class="col-xs-6 col-sm-3 col-md-3"><a href="#" class="btn btn-success btn-block btn-md">Examinar</a></div> -->
                         </div>

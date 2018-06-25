@@ -91,26 +91,21 @@ function fileValidation(){
     var filePath = fileInput.value;
     var allowedExtensions = /(\.jpg|\.jpeg)$/i;
     if(!allowedExtensions.exec(filePath)){
-        alert('Por favor inserte una imagen cuya extension sea JPEG o JPG.');
+        //alert('Por favor inserte una imagen cuya extension sea JPEG o JPG.');
+        $('#alertpicture').show();
         fileInput.value = '';
         return false;
     }else{
+        $('#alertpicture').hide();
         return true;
     }
 }
 
 function validate(){
 
-    if((fileValidation())&(validateEmailField(document.getElementById('emailbox').value))&(validateNameField(document.getElementById('first_name').value))&((validateSurnameField(document.getElementById('last_name').value)))&(validatePasswordField())&(pictureFile != null))
+    if((fileValidation())&(validateEmailField(document.getElementById('emailbox').value))&(validateNameField(document.getElementById('first_name').value))&((validateSurnameField(document.getElementById('last_name').value)))&(validatePasswordField()))
     {
         postForm();
-    }
-    else
-    {
-        if(pictureFile == null)
-        {
-            $('#alertpic').show();
-        }
     }
 }
 function postForm() {
