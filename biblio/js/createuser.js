@@ -51,7 +51,7 @@ function validateSurnameField (value){
 }
 
 function validatePasswordField (){
-    const validregex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$&*])(?=.*\d).{6,}$/gm;
+    const validregex = /^(?=.*[a-z])(?=.*[A-Z])((?=.*[!@#$&*])|(?=.*\d)).{6,}$/gm;
     $
     var pass = document.getElementById('password').value;
     var passconf = document.getElementById('password_confirmation').value;
