@@ -242,14 +242,18 @@ else{
                                     <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Contraseña" tabindex="5">
                                 </div>
                             </div>
-                            <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertpass" role="alert" style="display:none;">
-                                Las contraseñas no coinciden
-                            </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6">
                                 <div class="form-group">
                                     <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirmar Contraseña" tabindex="6">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger col-xs-24 col-sm-12 col-md-12" id="alertpass" role="alert" style="display:none;">
+                                    Las contraseñas no coinciden
                                 </div>
                             </div>
                         </div>
