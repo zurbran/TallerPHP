@@ -15,7 +15,7 @@
 			<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:white; text-decoration: none;">Iniciar Sesión / Registrarse</a>
 			<div class="dropdown-menu" aria-labelledby="dropdown03">
 				<div class="col-md-12">
-					<form class="form" role="form" method="post" action="/login.php" accept-charset="UTF-8" id="login-nav" enctype="multipart/form-data">
+					<form class="form" role="form" method="post" action="/grupo30/login.php" accept-charset="UTF-8" id="login-nav" enctype="multipart/form-data">
 						<div class="form-group">
 								<label class="sr-only" for="useremail">Usuario</label>
 								<input type="text" class="form-control" name="useremail" id="useremail" placeholder="Usuario" required>
