@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once("pdo-connect.php");
+require_once("../grupo30/pdo-connect.php");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $uploadOk = 0;
@@ -169,22 +169,22 @@ else{
         <!-- Bootstrap Core CSS -->
         <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
-        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="/grupo30/css/bootstrap.css" rel="stylesheet">
 
         <!-- Custom CSS -->
 
-        <link href="css/user-create.css" rel="stylesheet">
+        <link href="/grupo30/css/user-create.css" rel="stylesheet">
 
         <!-- jQuery -->
-        <script src="js/jquery.js"></script>
+        <script src="/grupo30/js/jquery.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/bootstrap.js"></script>
+        <script src="/grupo30/js/bootstrap.min.js"></script>
+        <script src="/grupo30/js/bootstrap.js"></script>
 
     </head>
 
-    <script src="js/createuser.js"> </script>
+    <script src="/grupo30/js/createuser.js"> </script>
 
     <body>
         <div class="container">

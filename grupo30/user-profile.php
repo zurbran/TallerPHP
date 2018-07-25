@@ -13,18 +13,18 @@
     <!-- Bootstrap Core CSS -->
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="/grupo30/css/bootstrap.css" rel="stylesheet">
 
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+    <script src="/grupo30/js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <script src="/grupo30/js/bootstrap.min.js"></script>
+    <script src="/grupo30/js/bootstrap.js"></script>
 
     <?php
-    require_once "pdo-connect.php";
-    require_once 'paginator.class.php';
+    require_once "../grupo30/pdo-connect.php";
+    require_once '../grupo30/paginator.class.php';
 
     $pdoconn = $pdo;
 
