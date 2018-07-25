@@ -51,9 +51,9 @@
                 }
                 catch(Exception $e)
                 {
-                    $user->logOut();
                     session_destroy();
-                    echo $e;
+                    $url = 'http://localhost/grupo30/single-book.php?cred=false';
+                    header( "Location: $url" );
                 }
                 include "loggednavbar.php";
             }

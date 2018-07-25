@@ -8,9 +8,15 @@
 			<ul class="navbar-nav mr-auto">
 
 			</ul>
+			<?php if(isset($_GET['cred'])): ?>
+				<span class="navbar-text text-danger">
+				Credenciales Incorrectas!
+				</span>
+			<?php else:	?>
 			<span class="navbar-text">
     		¿ Tiene usuario ?
-  		</span>
+  			</span>
+			<?php endif ?>
 			<span class="nav-item dropdown show">
 			<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:white; text-decoration: none;">Iniciar Sesión / Registrarse</a>
 			<div class="dropdown-menu" aria-labelledby="dropdown03">

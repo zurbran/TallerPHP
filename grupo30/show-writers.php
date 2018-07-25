@@ -64,9 +64,9 @@
             }
             catch(Exception $e)
             {
-                $user->logOut();
                 session_destroy();
-                echo $e;
+                $url = 'http://localhost/grupo30/show-writers.php?cred=false';
+                header( "Location: $url" );
             }
             include "loggednavbar.php";
         }

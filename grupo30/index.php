@@ -49,9 +49,9 @@
         }
         catch(Exception $e)
         {
-            $user->logOut();
             session_destroy();
-            echo $e;
+            $url = 'http://localhost/grupo30/index.php?cred=false';
+            header( "Location: $url" );
         }
     }
 
