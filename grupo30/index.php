@@ -25,6 +25,7 @@
     <?php
     require_once "../grupo30/pdo-connect.php";
     require_once "../grupo30/paginator.class.php";
+    require_once "../grupo30/user.class.php";
     
     $isLogged = false;
     $links= isset( $_GET['links'] ) ? $_GET['links'] : 8;
@@ -40,43 +41,20 @@
     $pdoconn = $pdo;
     $isPost = false;
 
-    if((isset($_SESSION['email']))&&(isset($_SESSION['password'])))
+    if(User::isLogged())
     {
-        $email = $_SESSION['email'];
-        $password = $_SESSION['password'];
-
-        $stmt = $pdoconn->prepare('SELECT id, nombre, apellido, rol FROM usuarios WHERE email = :email AND clave = :password');
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-        $stmt->bindValue(':password', $password, PDO::PARAM_STR);
-        $stmt->execute();
-
-        if($stmt->rowCount() == 0)
-        {
-            session_destroy();
-            $url = '/logerror.php';
-            header( "Location: $url" );
-        }
-        else
-        {
-            $row = $stmt->fetch();
-            $userData['id'] = $row['id'];
-            $userData['email'] = $email;
-            $userData['nombre'] = $row['nombre'];
-            $userData['apellido'] = $row['apellido'];
-            $userData['password'] = $password;
-            $userData['rol'] = $row['rol'];
-            $isLogged = true;
-        }
+        $user = User::login($_SESSION['email'],$_SESSION['password'],$pdo);
     }
 
-    if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
+    if(User::isLogged() && $user->isLibrarian()){
         $query= "SELECT l.autores_id, l.id, l.titulo, a.nombre, a.apellido, o.ultimo_estado, o.fecha_ultima_modificacion, u.nombre AS username, u.apellido AS userlastname, o.id AS operId FROM operaciones o INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id INNER JOIN usuarios u ON o.lector_id = u.id";
     }else{
         $query= "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
     }
+
     $Paginator  = new Paginator( $pdoconn, $query, $sort, $order );
 
-    if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
+    if(User::isLogged() && $user->isLibrarian()){
         $results= $Paginator->getRequestedOperations($limit , $page, $author, $tittle, $reader, $fromdate, $todate);            
     }else{
         $results= $Paginator->getData($limit , $page, $author, $tittle);
@@ -90,7 +68,7 @@
     <div class="container-fluid fill-height">
         <div class="row">
         <?php 
-            if($isLogged)
+            if(User::isLogged())
             {    
                 include "loggednavbar.php";
             }
@@ -119,8 +97,8 @@
                         <input type="search" id="autorbusqueda" class="form-control" placeholder="Ingrese el autor el cual buscar" name="searchA" value= "<?= $author?>">
                         </div>
 
-                        <?php if($isLogged){
-                            if($userData['rol'] == 'BIBLIOTECARIO') : ?>
+                        <?php if(User::isLogged()){
+                            if($user->isLibrarian()) : ?>
                             <div class="form-group">
                             <label for="lectorbusqueda">Lector</label>
                             <input type="search" id="lectorbusqueda" class="form-control" placeholder="Ingrese el lector el cual buscar" name="searchL" value= "<?= $reader?>">
@@ -154,7 +132,7 @@
                 {
             ?>
             <div class="col-xs-16 col-sm-10 col-md-10">
-            <?php if($isLogged && $userData['rol'] == 'BIBLIOTECARIO') : ?>
+            <?php if(User::isLogged() && $user->isLibrarian()) : ?>
                 <table class="table table-bordered">
                     <thead class="thead-dark">
                         <tr>
@@ -236,7 +214,7 @@
                         <th scope="col"><a href="/grupo30/index.php?sort=0&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Titulo</a></th>
                         <th scope="col"><a href="/grupo30/index.php?sort=2&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Autor</a></th>
                         <th scope="col">Ejemplares</th>
-                        <?php if($isLogged) : ?>
+                        <?php if(User::isLogged()) : ?>
                             <th scope="col">Accion</th>
                         <?php endif; ?>
                         </tr>
@@ -256,12 +234,12 @@
                                 $bookid = NULL;
                             }
                         }
-                        if ($isLogged)
+                        if (User::isLogged())
                         {
                             if($isPost)
                             {
                                 $stmt = $pdoconn->prepare("SELECT * FROM operaciones WHERE lector_id=:userid AND libros_id=:bookid AND NOT ultimo_estado='DEVUELTO'");
-                                $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                $stmt->bindValue(':userid', (int) $user->id, PDO::PARAM_INT);
                                 $stmt->bindValue(':bookid', (int) $bookid, PDO::PARAM_INT);
                                 $stmt->execute();
                                 if($stmt->rowCount() == 0)
@@ -282,7 +260,7 @@
                                         $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO', :currentDate , :userid , :bookid)");
                                         $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
                                         $stmt->bindValue(':bookid', (int) $bookid, PDO::PARAM_INT);
-                                        $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                        $stmt->bindValue(':userid', (int) $user->id, PDO::PARAM_INT);
                                         $stmt->execute();
                                     }
 
@@ -290,7 +268,7 @@
 
                             }
                             $stmt = $pdoconn->prepare("SELECT lector_id, COUNT(*) AS totalreservado from operaciones where lector_id= :userid AND NOT ultimo_estado='DEVUELTO' GROUP BY lector_id");
-                            $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                            $stmt->bindValue(':userid', (int) $user->id, PDO::PARAM_INT);
                             $stmt->execute();
                             $row = $stmt->fetch();
                             if($row['totalreservado']>=3)
@@ -326,10 +304,10 @@
                                     $reservados++;
                                 }
                             }
-                            if(($isLogged)&&(!$hasReachedLimit))
+                            if((User::isLogged())&&(!$hasReachedLimit))
                             {
                                 $stmt = $pdoconn->prepare("SELECT * FROM operaciones WHERE lector_id=:userid AND libros_id=:bookid AND NOT ultimo_estado='DEVUELTO'");
-                                $stmt->bindValue(':userid', (int) $userData['id'], PDO::PARAM_INT);
+                                $stmt->bindValue(':userid', (int) $user->id, PDO::PARAM_INT);
                                 $stmt->bindValue(':bookid', (int) $results->data[$i]["id"], PDO::PARAM_INT);
                                 $stmt->execute();
                                 if($stmt->rowCount() == 0)
@@ -365,7 +343,7 @@
                             $stockString .= ") </td>";
                             ?>
                         <td><?=$stockString?></td>
-                        <?php if($isLogged) : ?>
+                        <?php if(User::isLogged()) : ?>
                             <?php if(($disponibles > 0)&&(!$hasReachedLimit)&&(!$hasBook[$i])) : ?>
                                 <td><button type="button" onclick="reservate(<?=$results->data[$i]["id"]?>)" id="reserve<?=$results->data[$i]["id"]?>" class="btn btn-dark" >Reservar</button></td>
                             <?php else : ?>
@@ -385,7 +363,7 @@
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
                 <?php 
-                   if($isLogged && $userData['rol'] == 'BIBLIOTECARIO'){
+                   if(User::isLogged() && $user->isLibrarian()){
                     
                     $Paginator->createBiblioLinks( $links, 'pagination', 'indexpages', $tittle, $author, $reader, $fromdate, $todate);
                     }else{

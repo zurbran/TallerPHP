@@ -12,7 +12,7 @@
     		Usuario conectado:
   		</span>
 			<span class="nav-item dropdown show">
-			<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:white; text-decoration: none;"><?=$userData['nombre']." ".$userData['apellido']?></a>
+			<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:white; text-decoration: none;"><?=$user->nombre." ".$user->apellido?></a>
 			<div class="dropdown-menu" aria-labelledby="dropdown03">
 				<a class="dropdown-item" href="/grupo30/user-profile.php">Mi Perfil</a>
 				<a class="dropdown-item" href="/grupo30/logout.php">Cerrar Sesion</a>
