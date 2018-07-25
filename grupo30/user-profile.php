@@ -37,7 +37,16 @@
 
     if(User::isLogged())
     {
-        $user = User::login($_SESSION['email'],$_SESSION['password'],$pdo);
+        try
+        {
+            $user = User::login($_SESSION['email'],$_SESSION['password'],$pdo);
+        }
+        catch(Exception $e)
+        {
+            $user->logOut();
+            session_destroy();
+            echo $e;
+        }
     }
 
     $query      = "SELECT l.id ,l.portada, l.titulo, l.autores_id, a.apellido, a.nombre, o.ultimo_estado, o.fecha_ultima_modificacion FROM usuarios u INNER JOIN operaciones o ON u.id=o.lector_id INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id WHERE u.id=:userid";

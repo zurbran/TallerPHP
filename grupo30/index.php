@@ -43,7 +43,16 @@
 
     if(User::isLogged())
     {
-        $user = User::login($_SESSION['email'],$_SESSION['password'],$pdo);
+        try
+        {
+            $user = User::login($_SESSION['email'],$_SESSION['password'],$pdo);
+        }
+        catch(Exception $e)
+        {
+            $user->logOut();
+            session_destroy();
+            echo $e;
+        }
     }
 
     if(User::isLogged() && $user->isLibrarian()){

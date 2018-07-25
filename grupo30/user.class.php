@@ -32,7 +32,7 @@ class User{
 
         if($stmt->rowCount() == 0)
         {
-            throw new Exception("Emai o contaseña incorrecto.");
+            throw new Exception("Email o contaseña incorrecto.");
         }
         else
         {
