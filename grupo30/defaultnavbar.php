@@ -12,6 +12,10 @@
 				<span class="navbar-text text-danger">
 				Credenciales Incorrectas!
 				</span>
+			<?php elseif(isset($_GET['create'])): ?>
+				<span class="navbar-text text-success">
+				Cuenta creada con éxito! Por favor inicie sesión:
+				</span>
 			<?php else:	?>
 			<span class="navbar-text">
     		¿ Tiene usuario ?

@@ -10,6 +10,7 @@ function showFileName()
 
 function validateEmailField (value){
     validregex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    $('#alertemail2').hide();
     if(validregex.test(value) == true)
     {
         $('#alertemail').hide();
@@ -51,8 +52,10 @@ function validateSurnameField (value){
 }
 
 function validatePasswordField (){
-    const validregex = /^(?=.*[a-z])(?=.*[A-Z])((?=.*[!@#$&*])|(?=.*\d)).{6,}$/gm;
-    $
+    // const validregex = /^(?=.*[a-z])(?=.*[A-Z])((?=.*[!@#$&*])|(?=.*\d)).{6,}$/gm;
+    // $
+    validregex = /^((?=.*[a-z])(?=.*[A-Z]))((?=.*[-!@#$&*])|(?=.*\d)).{6,}$/;
+    
     var pass = document.getElementById('password').value;
     var passconf = document.getElementById('password_confirmation').value;
 
@@ -78,7 +81,8 @@ function validatePasswordField (){
             }
             else
             {
-                $('#alertpass').text("La contraseña contiene menos de 6 caracteres o no incluye al menos una letra Mayuscula o ningun simbolo (!@#$&*)");
+                $('#alertpass').text("La contraseña debe ser de por los menos 6 carecteres incluyendo letras (mayúsculas y minúsculas) y por lo menos un número o un símbolo"); 
+                 
                 $('#alertpass').show();
                 return 0;
             }

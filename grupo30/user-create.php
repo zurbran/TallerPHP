@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <?php
 require_once("../grupo30/pdo-connect.php");
+
+$name= isset( $_GET['name'] ) ? $_GET['name'] : "";
+$lastname= isset( $_GET['lastname'] ) ? $_GET['lastname'] : "";
+$email= isset($_GET['email']) ? $_GET['email'] : false;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $uploadOk = 0;
@@ -44,8 +49,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_POST['emailbox'];
         if(filter_var($email,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>'/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD'))))
         {
-            $validemail = true;
-            echo "Email correcto";
+            $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email=:email");
+            $stmt->bindParam(':email',$email);
+            $stmt->execute();
+            if($stmt->rowCount()!=0){
+                $url = "http://localhost/grupo30/user-create.php?email=true&name=$nombre&lastname=$apellido";
+                header( "Location: $url" );
+                die("ERROR: El email ya existe.");
+            }else{
+                $validemail = true;
+                echo "Email correcto.";
+            }
             echo "<br>";
         }
         else
@@ -60,9 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     {
         $pass = $_POST['password'];
         $passconf = $_POST['password_confirmation'];
-        if(filter_var($pass,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$&*])(?=.*\d).{6,}$/"))))
+        if(filter_var($pass,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/^((?=.*[a-z])(?=.*[A-Z]))((?=.*[-!@#$&*])|(?=.*\d)).{6,}$/"))))
         {
-            if(filter_var($passconf,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$&*])(?=.*\d).{6,}$/"))))
+            if(filter_var($passconf,FILTER_VALIDATE_REGEXP, array("options" => array("regexp"=>"/^((?=.*[a-z])(?=.*[A-Z]))((?=.*[-!@#$&*])|(?=.*\d)).{6,}$/"))))
             {
                 if(!strcmp($pass,$passconf))
                 {
@@ -151,11 +165,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindValue(':picture', $picturefile, PDO::PARAM_LOB);
         $stmt->bindValue(':pass', $pass, PDO::PARAM_STR);
         $stmt->bindValue(':rol', 'LECTOR' , PDO::PARAM_STR);
-        $stmt->execute();
+        try{
+            $stmt->execute();
+        } catch (PDOException $e) {
+            if($e->getCode() == "23000"){
+                die("ERROR: El email ya existe.");
+            }else{
+                die("Hubo un error al crear la cuenta");
+            }
+        }
         $pdo->lastInsertId();
         $_SESSION['user'] = $email;
         $_SESSION['password'] = $pass;
-        $url = 'http://localhost/index.php';
+        $url = 'http://localhost/grupo30/index.php?create=true';
         header( "Location: $url" );
     }
 }
@@ -196,7 +218,7 @@ else{
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6">
                                 <div class="form-group">
-                                    <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="Nombre" tabindex="1">
+                                    <input value="<?=$name?>" type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="Nombre" tabindex="1">
                                 </div>
                             </div>
                             <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertname" role="alert" style="display:none;">
@@ -206,7 +228,7 @@ else{
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6">
                                 <div class="form-group">
-                                    <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Apellido" tabindex="2">
+                                    <input value="<?= $lastname?>" type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Apellido" tabindex="2">
                                 </div>
                             </div>
                                 <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger" id="alertlastname" role="alert" style="display:none;">
@@ -235,6 +257,11 @@ else{
                             <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertemail" role="alert" style="display:none;">
                                 Email Inválido
                             </div>
+                            <?php if($email): ?>
+                            <div class="alert alert-danger col-xs-12 col-sm-6 col-md-6" id="alertemail2" role="alert">
+                                El email ya existe.
+                            </div>
+                            <?php endif;?>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -253,7 +280,7 @@ else{
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="alert alert-danger col-xs-24 col-sm-12 col-md-12" id="alertpass" role="alert" style="display:none;">
-                                    Las contraseñas no coinciden
+                                Contraseña inválida.
                                 </div>
                             </div>
                         </div>
@@ -263,7 +290,6 @@ else{
                                 <btn id="submitbtn" class="btn btn-primary btn-block" onclick="validate()" tabindex="7">Registrar</btn>
                             </div>
                         </div>
-                        <!-- <input type="submit" style:"display:none" value="Register" name="register" class="btn btn-block btn-primary"  /> -->
                     </form>
                 </div>
             </div>
