@@ -1,7 +1,17 @@
 <?php
     session_start();
-    if((isset($_SESSION['email']))&&isset($_SESSION['password']))
+    if(User::isLogged())
     {
+        try
+        {
+            $user = User::login($_SESSION['email'],$_SESSION['password'],$pdo);
+        }
+        catch(Exception $e)
+        {
+            session_destroy();
+            $url = 'http://localhost/grupo30/index.php?cred=false';
+            header( "Location: $url" );
+        }
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -34,20 +44,6 @@
     $page=  isset( $_GET['page'] )  ? $_GET['page']  : 1;
     $sort=  isset( $_GET['sort'] )  ? $_GET['sort']  : 0;
     $order= isset( $_GET['order'] ) ? $_GET['order'] : 0;
-
-    if(User::isLogged())
-    {
-        try
-        {
-            $user = User::login($_SESSION['email'],$_SESSION['password'],$pdo);
-        }
-        catch(Exception $e)
-        {
-            session_destroy();
-            $url = 'http://localhost/grupo30/index.php?cred=false';
-            header( "Location: $url" );
-        }
-    }
 
     $query      = "SELECT l.id ,l.portada, l.titulo, l.autores_id, a.apellido, a.nombre, o.ultimo_estado, o.fecha_ultima_modificacion FROM usuarios u INNER JOIN operaciones o ON u.id=o.lector_id INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id WHERE u.id=:userid";
 

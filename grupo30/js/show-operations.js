@@ -23,5 +23,17 @@ function post(path, params, method) {
 function reservate(id)
 {
     var objReserve = {bookId : id};
-    post("/grupo30/index.php"+window.location.search,objReserve,"post");
+    post("/grupo30/show-operations.php"+window.location.search,objReserve,"post");
+}
+
+function borrow(opid)
+{
+    var objBorrow = {opNum : opid , operation : "borrow"};
+    post("/grupo30/show-operations.php"+window.location.search,objBorrow,"post");
+}
+
+function takeback(opid)
+{
+    var objTakeBack = {opNum : opid , operation : "takeback"};
+    post("/grupo30/show-operations.php"+window.location.search,objTakeBack,"post");
 }

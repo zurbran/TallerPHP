@@ -15,6 +15,9 @@
 			<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:white; text-decoration: none;"><?=$user->nombre." ".$user->apellido?></a>
 			<div class="dropdown-menu" aria-labelledby="dropdown03">
 				<a class="dropdown-item" href="/grupo30/user-profile.php">Mi Perfil</a>
+				<?php if($user->isLibrarian()) : ?>
+				<a class="dropdown-item" href="/grupo30/show-operations.php">Operaciones</a>
+				<?php endif ?>
 				<a class="dropdown-item" href="/grupo30/logout.php">Cerrar Sesion</a>
 			</div>
 			</span>	

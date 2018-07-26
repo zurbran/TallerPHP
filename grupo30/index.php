@@ -3,13 +3,11 @@
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>Biblioteca UNLP - Indice</title>
 
     <!-- Bootstrap Core CSS -->
-    <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
     <link href="/grupo30/css/bootstrap.css" rel="stylesheet">
 
@@ -27,7 +25,6 @@
     require_once "../grupo30/paginator.class.php";
     require_once "../grupo30/user.class.php";
     
-    $isLogged = false;
     $links= isset( $_GET['links'] ) ? $_GET['links'] : 8;
     $limit= isset( $_GET['limit'] ) ? $_GET['limit'] : 5;
     $page=  isset( $_GET['page'] )  ? $_GET['page']  : 1;
@@ -55,19 +52,12 @@
         }
     }
 
-    if(User::isLogged() && $user->isLibrarian()){
-        $query= "SELECT l.autores_id, l.id, l.titulo, a.nombre, a.apellido, o.ultimo_estado, o.fecha_ultima_modificacion, u.nombre AS username, u.apellido AS userlastname, o.id AS operId FROM operaciones o INNER JOIN libros l ON o.libros_id=l.id INNER JOIN autores a ON l.autores_id=a.id INNER JOIN usuarios u ON o.lector_id = u.id";
-    }else{
-        $query= "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
-    }
+
+    $query= "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
     $Paginator  = new Paginator( $pdoconn, $query, $sort, $order );
 
-    if(User::isLogged() && $user->isLibrarian()){
-        $results= $Paginator->getRequestedOperations($limit , $page, $author, $tittle, $reader, $fromdate, $todate);            
-    }else{
-        $results= $Paginator->getData($limit , $page, $author, $tittle);
-    }
+    $results= $Paginator->getData($limit , $page, $author, $tittle);
 
     ?>
     
@@ -105,22 +95,6 @@
                         <label for="autorbusqueda">Autor</label>
                         <input type="search" id="autorbusqueda" class="form-control" placeholder="Ingrese el autor el cual buscar" name="searchA" value= "<?= $author?>">
                         </div>
-
-                        <?php if(User::isLogged()){
-                            if($user->isLibrarian()) : ?>
-                            <div class="form-group">
-                            <label for="lectorbusqueda">Lector</label>
-                            <input type="search" id="lectorbusqueda" class="form-control" placeholder="Ingrese el lector el cual buscar" name="searchL" value= "<?= $reader?>">
-                            </div>
-                            <div class="form-group">
-                            <label for="fechadesde">Fecha desde:</label>
-                            <input type="date" id="fechadesde" class="form-control" name="datefrom" value="<?= $fromdate?>">
-                            </div>
-                            <div class="form-group">
-                            <label for="fechahasta">Fecha hasta:</label>
-                            <input type="date" id="fechahasta" class="form-control" name="dateuntil" value="<?= $todate?>" >
-                            </div>
-                        <?php endif; } ?>  
                         <button type="submit" class="btn btn-primary">Buscar</button>
                     </fieldset>
                 </form>
@@ -128,6 +102,12 @@
         </div>
 
         <hr/>
+
+        <!-- <div class="row justify-content-md-center">
+            <div class="alert alert-success col-md-auto" id="alertreserved" role="alert">
+            Libro reservado correctamente.
+            </div>
+        </div> -->
 
         <div class="row">
             <div class="col-md-1">
@@ -141,91 +121,16 @@
                 {
             ?>
             <div class="col-xs-16 col-sm-10 col-md-10">
-            <?php if(User::isLogged() && $user->isLibrarian()) : ?>
                 <table class="table table-bordered">
                     <thead class="thead-dark">
                         <tr>
-                        <th scope="col">Titulo</a></th>
-                        <th scope="col">Autor</a></th>
-                        <th scope="col">Lector</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Acción</th>
-                        </tr>
-                    </thead>
-
-                    <?php if (($_SERVER['REQUEST_METHOD'] === 'POST'))
-                        {
-                            $isPost = true;
-                            if (isset($_POST['opNum'])&&isset($_POST['operation']))
-                            {
-                                $opid = $_POST['opNum'];
-                                $op = $_POST['operation'];
-                            }
-                            else
-                            {
-                                $opid = NULL;
-                                $op = NULL;
-                            }
-                        } 
-                    ?>
-
-                    <tbody>
-                    <?php
-                        for( $i = 0; $i < count( $results->data ); $i++ ) :
-                    ?>
-                        <tr>
-                        <td><a href='/grupo30/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
-                        <td><a href='/grupo30/show-writers.php?author_id=<?=$results->data[$i]["autores_id"]?>&limit=5&page=1'><?=$results->data[$i]["nombre"]?> <?=$results->data[$i]["apellido"]?></a></td>
-                        <td><?= $results->data[$i]["username"].' '.$results->data[$i]["userlastname"] ?></td>
-                        <?php if (($isPost)&&($opid == $results->data[$i]["operId"]))
-                            {
-                                if(($op == "borrow")&&($results->data[$i]["ultimo_estado"] == 'RESERVADO'))
-                                {
-                                    $dateString = date("Y:m:d");
-                                    $stmt = $pdoconn->prepare("UPDATE operaciones SET ultimo_estado='PRESTADO', fecha_ultima_modificacion= :currentDate WHERE id= :operationid");
-                                    $stmt->bindValue(':operationid', $opid , PDO::PARAM_INT);
-                                    $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
-                                    $stmt->execute();
-                                    $results->data[$i]["ultimo_estado"] = 'PRESTADO';
-                                }
-                                elseif (($op == "takeback")&&($results->data[$i]["ultimo_estado"] == 'PRESTADO'))
-                                {
-                                    $dateString = date("Y:m:d");
-                                    $stmt = $pdoconn->prepare("UPDATE operaciones SET ultimo_estado='DEVUELTO', fecha_ultima_modificacion= :currentDate WHERE id= :operationid ");
-                                    $stmt->bindValue(':operationid', $opid , PDO::PARAM_INT);
-                                    $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
-                                    $stmt->execute();
-                                    $results->data[$i]["ultimo_estado"] = 'DEVUELTO';
-                                }
-                            }
-                        ?>
-                        <td><?= $results->data[$i]["ultimo_estado"] ?></td>
-                        <td><?= $results->data[$i]["fecha_ultima_modificacion"] ?></td>
-                        <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
-                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["operId"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
-                        <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
-                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["operId"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
-                        <?php else : ?>
-                                <td></td>
-                        <?php endif; ?>
-                        </tr>
-                    <?php
-                        endfor;
-                    ?>
-                    </tbody>
-                </table>
-            <?php else : ?>
-                <table class="table table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                        <th scope="col">Portada</th>
-                        <th scope="col"><a href="/grupo30/index.php?sort=0&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Titulo</a></th>
-                        <th scope="col"><a href="/grupo30/index.php?sort=2&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Autor</a></th>
-                        <th scope="col">Ejemplares</th>
-                        <?php if(User::isLogged()) : ?>
-                            <th scope="col">Accion</th>
-                        <?php endif; ?>
+                            <th scope="col">Portada</th>
+                            <th scope="col"><a href="/grupo30/index.php?sort=0&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Titulo</a></th>
+                            <th scope="col"><a href="/grupo30/index.php?sort=2&order=<?=(($order == 0)?1:0);?>&searchA=<?=$author?>&searchT=<?=$tittle?>&limit=5&page=1">Autor</a></th>
+                            <th scope="col">Ejemplares</th>
+                            <?php if((User::isLogged())&&($user->isReader())) : ?>
+                                <th scope="col">Accion</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     
@@ -243,7 +148,7 @@
                                 $bookid = NULL;
                             }
                         }
-                        if (User::isLogged())
+                        if ((User::isLogged())&&($user->isReader()))
                         {
                             if($isPost)
                             {
@@ -265,7 +170,7 @@
                                     $disponibles = $total - $prestados - $reservados;
                                     if($disponibles > 0)
                                     {
-                                        $dateString = date("Y:m:d");
+                                        $dateString = date("Y-m-d");
                                         $stmt = $pdoconn->prepare("INSERT INTO operaciones(ultimo_estado,fecha_ultima_modificacion,lector_id,libros_id) VALUES ('RESERVADO', :currentDate , :userid , :bookid)");
                                         $stmt->bindValue(':currentDate', $dateString, PDO::PARAM_STR);
                                         $stmt->bindValue(':bookid', (int) $bookid, PDO::PARAM_INT);
@@ -313,7 +218,7 @@
                                     $reservados++;
                                 }
                             }
-                            if((User::isLogged())&&(!$hasReachedLimit))
+                            if((User::isLogged())&&($user->isReader())&&(!$hasReachedLimit))
                             {
                                 $stmt = $pdoconn->prepare("SELECT * FROM operaciones WHERE lector_id=:userid AND libros_id=:bookid AND NOT ultimo_estado='DEVUELTO'");
                                 $stmt->bindValue(':userid', (int) $user->id, PDO::PARAM_INT);
@@ -352,7 +257,7 @@
                             $stockString .= ") </td>";
                             ?>
                         <td><?=$stockString?></td>
-                        <?php if(User::isLogged()) : ?>
+                        <?php if((User::isLogged())&&($user->isReader())) : ?>
                             <?php if(($disponibles > 0)&&(!$hasReachedLimit)&&(!$hasBook[$i])) : ?>
                                 <td><button type="button" onclick="reservate(<?=$results->data[$i]["id"]?>)" id="reserve<?=$results->data[$i]["id"]?>" class="btn btn-dark" >Reservar</button></td>
                             <?php else : ?>
@@ -362,8 +267,7 @@
                         </tr>
                         <?php endfor; ?>
                     </tbody>
-                </table>
-            <?php endif; ?>                  
+                </table>                 
             </div>
             <div class="col-md-1">
             </div>
@@ -372,12 +276,7 @@
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
                 <?php 
-                   if(User::isLogged() && $user->isLibrarian()){
-                    
-                    $Paginator->createBiblioLinks( $links, 'pagination', 'indexpages', $tittle, $author, $reader, $fromdate, $todate);
-                    }else{
                     $Paginator->createLinks( $links, 'pagination','indexpages', $tittle, $author);
-                    }
                 ?>
             </div>
         </div>
