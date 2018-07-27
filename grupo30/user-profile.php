@@ -1,5 +1,6 @@
 <?php
     session_start();
+    require_once "../grupo30/user.class.php";
     if(User::isLogged())
     {
         try
@@ -35,7 +36,6 @@
     <?php
     require_once "../grupo30/pdo-connect.php";
     require_once '../grupo30/paginator.class.php';
-    require_once "../grupo30/user.class.php";
 
     $pdoconn = $pdo;
 
