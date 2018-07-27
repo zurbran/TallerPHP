@@ -1,0 +1,10 @@
+.operation-msj{
+    height: auto;
+    padding: 5px;
+    margin: 0;
+    max-width: 100%;
+}
+
+.-hide{
+    display: none;
+}

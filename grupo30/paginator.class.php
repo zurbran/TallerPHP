@@ -13,6 +13,7 @@ class Paginator {
     private $_sort;
     private $_order;
     private $_fromdate;
+    private $_todate;
 
 public function __construct( $conn, $query, $sort, $order ) {
      
@@ -131,8 +132,11 @@ private function totalOperations($author, $title, $reader, $fromdate, $todate){
         $reader = '%';
     if(empty($fromdate))
         $fromdate = '1999-12-31';
+    if(empty($todate))
+        $todate = date("Y-m-d");
 
     $this->_fromdate = $fromdate;
+    $this->_todate = $todate;
 
     $this->_statement->bindValue(':searchAn', '%'.$author.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':searchAa', '%'.$author.'%', PDO::PARAM_STR);
@@ -173,7 +177,7 @@ public function getRequestedOperations($limit, $page, $author, $title, $reader, 
     $this->_statement->bindValue(':searchLn', '%'.$reader.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':searchLa', '%'.$reader.'%', PDO::PARAM_STR);
     $this->_statement->bindValue(':datefromfilter',$this->_fromdate, PDO::PARAM_STR);
-    $this->_statement->bindValue(':datetofilter', $todate, PDO::PARAM_STR);
+    $this->_statement->bindValue(':datetofilter', $this->_todate, PDO::PARAM_STR);
     $this->_statement->execute();
 
     while ( $row =  $this->_statement->fetch(PDO::FETCH_ASSOC) ) {

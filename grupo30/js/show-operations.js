@@ -11,12 +11,12 @@ function post(path, params, method) {
             hiddenField.setAttribute("id", key);
             hiddenField.setAttribute("name", key);
             hiddenField.setAttribute("value", params[key]);
-
             form.appendChild(hiddenField);
         }
     }
 
     document.body.appendChild(form);
+
     form.submit();
 }
 
@@ -36,4 +36,12 @@ function takeback(opid)
 {
     var objTakeBack = {opNum : opid , operation : "takeback"};
     post("/grupo30/show-operations.php"+window.location.search,objTakeBack,"post");
+}
+
+function fadeAlert(){
+    var btn = document.getElementById("alertbutton");
+    btn.classList.remove("-hide");
+    setTimeout(function () {
+        btn.classList.add("-hide");
+    }, 5000);
 }

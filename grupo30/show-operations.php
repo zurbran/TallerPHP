@@ -28,7 +28,8 @@
     <!-- Bootstrap Core CSS -->
 
     <link href="/grupo30/css/bootstrap.css" rel="stylesheet">
-    <link href="/grupo30/css/hidden.css" rel="stylesheet">
+    <link href="/grupo30/css/show-operations.css" rel="stylesheet">
+    <!-- <link href="/grupo30/css/hidden.css" rel="stylesheet"> -->
 
     <!-- jQuery -->
     <script src="/grupo30/js/jquery.js"></script>
@@ -52,7 +53,8 @@
     $author = isset($_GET['searchA']) ? $_GET['searchA'] : '';
     $reader = isset($_GET['searchL']) ? $_GET['searchL'] : '';
     $fromdate = isset($_GET['datefrom']) ? $_GET['datefrom'] : '';
-    $todate = isset($_GET['dateuntil']) ? $_GET['dateuntil'] : date("Y-m-d");
+    $todate = isset($_GET['dateuntil']) ? $_GET['dateuntil'] : '';
+    $showAlert = isset($_GET['alert']) ? $_GET['alert'] : false;
     $isPost = false;
     $pdoconn = $pdo;
 
@@ -185,12 +187,42 @@
                         <td><?= $results->data[$i]["ultimo_estado"] ?></td>
                         <td><?= $results->data[$i]["fecha_ultima_modificacion"] ?></td>
                         <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
-                            <td><button type="button" onclick="borrow(<?=$results->data[$i]["operId"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button></td>
+                            <td>
+                                <button type="button" onclick="borrow(<?=$results->data[$i]["operId"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button>
+                                <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger operation-msj -hide" id="alertbutton" role="alert">
+                                    Existe este estado???
+                                </div>
+                                <?php if($showAlert): ?>
+                                    <script>
+                                        fadeAlert();
+                                    </script>
+                                <?php endif; ?>
+                            </td>
                         <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
-                            <td><button type="button" onclick="takeback(<?=$results->data[$i]["operId"]?>)" id="taked" class="btn btn-dark" >Devolver</button></td>
+                            <td>
+                                <button type="button" onclick="takeback(<?=$results->data[$i]["operId"]?>)" id="taked" class="btn btn-dark" >Devolver</button>
+                                <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger operation-msj -hide" id="alertbutton" role="alert">
+                                    Libro prestado con éxito.
+                                </div>
+                                <?php if($showAlert): ?>
+                                    <script>
+                                        fadeAlert();
+                                    </script>
+                                <?php endif; ?>
+                            </td>
                         <?php else : ?>
-                                <td></td>
+                            <td>
+                                <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger operation-msj -hide" id="alertbutton" role="alert">
+                                    Libro devuelto con éxito.
+                                </div>
+                            </td>
+                            <?php if($showAlert): ?>
+                                <script>
+                                    fadeAlert();
+                                </script>
+                            <?php endif; ?>
                         <?php endif; ?>
+                        
                         </tr>
                     <?php
                         endfor;
