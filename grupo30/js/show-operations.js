@@ -29,17 +29,32 @@ function reservate(id)
 function borrow(opid)
 {
     var objBorrow = {opNum : opid , operation : "borrow"};
-    post("/grupo30/show-operations.php"+window.location.search,objBorrow,"post");
+    post("/grupo30/show-operations.php?alert=true"+window.location.search.replace("?", "&"),objBorrow,"post");
 }
 
 function takeback(opid)
 {
     var objTakeBack = {opNum : opid , operation : "takeback"};
-    post("/grupo30/show-operations.php"+window.location.search,objTakeBack,"post");
+    post("/grupo30/show-operations.php?alert=true"+window.location.search.replace("?", "&"),objTakeBack,"post");
 }
 
-function fadeAlert(){
+function fadeAlert(operation){
     var btn = document.getElementById("alertbutton");
+    var msg;
+    switch(operation) {
+        case "reserved":
+            msj = "Libro reservado con éxito"; 
+            break;
+        case "borrowed":
+            msj = "Libro prestado con éxito"; 
+            break;
+        case "returned":
+            msj = "Libro devuelto con éxito";
+            break;
+        default:
+            msj = "Operación inválida";
+    }
+    btn.innerHTML = msj;
     btn.classList.remove("-hide");
     setTimeout(function () {
         btn.classList.add("-hide");

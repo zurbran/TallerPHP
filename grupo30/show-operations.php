@@ -124,6 +124,9 @@
                 {
             ?>
             <div class="col-xs-16 col-sm-10 col-md-10">
+                <div class="col-xs-12 col-sm-6 col-md-6 alert alert-success operation-msj -hide" id="alertbutton" role="alert">
+                    Libro devuelto con éxito.
+                </div>
                 <table class="table table-bordered">
                     <thead class="thead-dark">
                         <tr>
@@ -189,40 +192,25 @@
                         <?php if($results->data[$i]["ultimo_estado"] == 'RESERVADO') : ?>
                             <td>
                                 <button type="button" onclick="borrow(<?=$results->data[$i]["operId"]?>)" id="borrowed" class="btn btn-dark" >Prestar</button>
-                                <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger operation-msj -hide" id="alertbutton" role="alert">
-                                    Existe este estado???
-                                </div>
-                                <?php if($showAlert): ?>
-                                    <script>
-                                        fadeAlert();
-                                    </script>
-                                <?php endif; ?>
                             </td>
                         <?php elseif($results->data[$i]["ultimo_estado"] == 'PRESTADO') : ?>
                             <td>
                                 <button type="button" onclick="takeback(<?=$results->data[$i]["operId"]?>)" id="taked" class="btn btn-dark" >Devolver</button>
-                                <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger operation-msj -hide" id="alertbutton" role="alert">
-                                    Libro prestado con éxito.
-                                </div>
                                 <?php if($showAlert): ?>
                                     <script>
-                                        fadeAlert();
+                                        fadeAlert("borrowed");
                                     </script>
                                 <?php endif; ?>
                             </td>
                         <?php else : ?>
                             <td>
-                                <div class="col-xs-12 col-sm-6 col-md-6 alert alert-danger operation-msj -hide" id="alertbutton" role="alert">
-                                    Libro devuelto con éxito.
-                                </div>
-                            </td>
                             <?php if($showAlert): ?>
                                 <script>
-                                    fadeAlert();
+                                    fadeAlert("returned");
                                 </script>
                             <?php endif; ?>
+                            </td>
                         <?php endif; ?>
-                        
                         </tr>
                     <?php
                         endfor;
