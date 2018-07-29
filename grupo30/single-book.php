@@ -74,21 +74,20 @@
         <div class=row>
             <div class="col-md-6">
                 <div class=row>
-                    <?php echo "<p class='h1 titulo-libro'>" . $result[0]['titulo'] . "</p>"?>
+                    <p class='h1 titulo-libro'><?=$result[0]['titulo']?></p>
                 </div>
                 <div class=row>
-                    <?php echo "<p class='texto-ficha'> Autor: " . $result[0]['nombre'] . " " . $result[0]['apellido'] . "</p>"?>
+                    <p class='texto-ficha'> Autor: <?=$result[0]['nombre'] . " " . $result[0]['apellido']?></p>
                 </div>
                 <div class=row>
-                    <?php echo "<p class='texto-ficha'> Ejemplares: " . $result[0]['cantidad'] . "</p>"?>   
+                    <p class='texto-ficha'> Ejemplares: <?=$result[0]['cantidad']?></p>   
                 </div>
             </div>
             <div class="col-md-3">
             </div>
             <div class="col-md-3">
-            <?php
-                echo '<img src="data:image/jpeg;base64,'.base64_encode( $result[0]['portada'] ).'" width="200";/>';
-            ?>
+                <?php $enconded_image = base64_encode($result[0]['portada']); ?>
+                <img src="data:image/jpg;base64,<?=$enconded_image?>" width='200'/>;
             </div>
         </div>
         <div class=row>
@@ -99,7 +98,7 @@
             </div>
         </div>
         <div class=row>
-            <?php echo "<p class='sinopsis'>" . $result[0]['descripcion'] . "</p>" ?>
+            <p class='sinopsis'>  <?=$result[0]['descripcion']?> </p>
         </div>
     </div>
 </body>
