@@ -23,5 +23,5 @@ function post(path, params, method) {
 function reservate(id)
 {
     var objReserve = {bookId : id};
-    post("/grupo30/index.php"+window.location.search,objReserve,"post");
+    post("index.php"+window.location.search,objReserve,"post");
 }

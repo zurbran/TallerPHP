@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    require_once "../grupo30/user.class.php";
+    require_once "user.class.php";
 
     if(User::isLogged())
     {
@@ -12,7 +12,7 @@
         catch(Exception $e)
         {
             session_destroy();
-            $url = 'http://localhost/grupo30/index.php?cred=false';
+            $url = 'index.php?cred=false';
             header( "Location: $url" );
         }
         if($user->isLibrarian())
@@ -27,22 +27,22 @@
 
     <!-- Bootstrap Core CSS -->
 
-    <link href="/grupo30/css/bootstrap.css" rel="stylesheet">
-    <link href="/grupo30/css/show-operations.css" rel="stylesheet">
-    <!-- <link href="/grupo30/css/hidden.css" rel="stylesheet"> -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/show-operations.css" rel="stylesheet">
+    <!-- <link href="css/hidden.css" rel="stylesheet"> -->
 
     <!-- jQuery -->
-    <script src="/grupo30/js/jquery.js"></script>
+    <script src="js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="/grupo30/js/bootstrap.min.js"></script>
-    <script src="/grupo30/js/bootstrap.js"></script>
-    <script src="/grupo30/js/show-operations.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/show-operations.js"></script>
 
     <?php
 
-    require_once "../grupo30/pdo-connect.php";
-    require_once '../grupo30/paginator.class.php';
+    require_once "pdo-connect.php";
+    require_once 'paginator.class.php';
 
     $links= isset( $_GET['links'] ) ? $_GET['links'] : 8;
     $limit= isset( $_GET['limit'] ) ? $_GET['limit'] : 5;
@@ -160,8 +160,8 @@
                         for( $i = 0; $i < count( $results->data ); $i++ ) :
                     ?>
                         <tr>
-                        <td><a href='/grupo30/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
-                        <td><a href='/grupo30/show-writers.php?author_id=<?=$results->data[$i]["autores_id"]?>&limit=5&page=1'><?=$results->data[$i]["nombre"]?> <?=$results->data[$i]["apellido"]?></a></td>
+                        <td><a href='single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
+                        <td><a href='show-writers.php?author_id=<?=$results->data[$i]["autores_id"]?>&limit=5&page=1'><?=$results->data[$i]["nombre"]?> <?=$results->data[$i]["apellido"]?></a></td>
                         <td><?= $results->data[$i]["username"].' '.$results->data[$i]["userlastname"] ?></td>
                         <?php if (($isPost)&&($opid == $results->data[$i]["operId"]))
                             {

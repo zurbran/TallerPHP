@@ -1,5 +1,5 @@
 <nav class="navbar navbar-dark navbar-expand bg-dark fixed-top ">
-		<a class="navbar-brand" href="/grupo30/index.php">Biblioteca UNLP</a>
+		<a class="navbar-brand" href="index.php">Biblioteca UNLP</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#indexnavbar" aria-controls="indexnavbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -21,11 +21,11 @@
     		¿ Tiene usuario ?
   			</span>
 			<?php endif ?>
-			<span class="nav-item dropdown show">
-			<a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="color:white; text-decoration: none;">Iniciar Sesión / Registrarse</a>
+			<span class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" id="dropdown03" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white; text-decoration: none;">Iniciar Sesión / Registrarse</a>
 			<div class="dropdown-menu" aria-labelledby="dropdown03">
 				<div class="col-md-12">
-					<form class="form" role="form" method="post" action="/grupo30/login.php" accept-charset="UTF-8" id="login-nav" enctype="multipart/form-data">
+					<form class="form" role="form" method="post" action="login.php" accept-charset="UTF-8" id="login-nav" enctype="multipart/form-data">
 						<div class="form-group">
 								<label class="sr-only" for="useremail">Usuario</label>
 								<input type="text" class="form-control" name="useremail" id="useremail" placeholder="Usuario" required>
@@ -44,7 +44,7 @@
 						</div>
 					</form>
 					<div class="bottom text-center">
-					¿No tiene usuario? <a href="/grupo30/user-create.php"><b>Registrarse</b></a>
+					¿No tiene usuario? <a href="user-create.php"><b>Registrarse</b></a>
 					</div>
 				</div>
 			</div>

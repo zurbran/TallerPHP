@@ -11,23 +11,23 @@
     <!-- Bootstrap Core CSS -->
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
-    <link href="/grupo30/css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom CSS -->
 
-    <link href="/grupo30/css/single-book.css" rel="stylesheet">
-    <link href="/grupo30/css/media.css" rel="stylesheet">
+    <link href="css/single-book.css" rel="stylesheet">
+    <link href="css/media.css" rel="stylesheet">
 
     <!-- jQuery -->
-    <script src="/grupo30/js/jquery.js"></script>
+    <script src="js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="/grupo30/js/bootstrap.min.js"></script>
-    <script src="/grupo30/js/bootstrap.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.js"></script>
 
         <?php
-        require_once "../grupo30/pdo-connect.php";
-        require_once "../grupo30/user.class.php";
+        require_once "pdo-connect.php";
+        require_once "user.class.php";
 
         $isLogged = false;
         $stmt= $pdo->prepare('SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, l.descripcion, l.id FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.id = :book');
@@ -52,7 +52,7 @@
                 catch(Exception $e)
                 {
                     session_destroy();
-                    $url = 'http://localhost/grupo30/single-book.php?cred=false';
+                    $url = 'single-book.php?cred=false';
                     header( "Location: $url" );
                 }
                 include "loggednavbar.php";

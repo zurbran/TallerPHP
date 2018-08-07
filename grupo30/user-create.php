@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once("../grupo30/pdo-connect.php");
+require_once("pdo-connect.php");
 
 $name= isset( $_GET['name'] ) ? $_GET['name'] : "";
 $lastname= isset( $_GET['lastname'] ) ? $_GET['lastname'] : "";
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindParam(':email',$email);
             $stmt->execute();
             if($stmt->rowCount()!=0){
-                $url = "http://localhost/grupo30/user-create.php?email=true&name=$nombre&lastname=$apellido";
+                $url = "user-create.php?email=true&name=$nombre&lastname=$apellido";
                 header( "Location: $url" );
                 die("ERROR: El email ya existe.");
             }else{
@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->lastInsertId();
         $_SESSION['user'] = $email;
         $_SESSION['password'] = $pass;
-        $url = 'http://localhost/grupo30/index.php?create=true';
+        $url = 'index.php?create=true';
         header( "Location: $url" );
     }
 }
@@ -191,22 +191,22 @@ else{
         <!-- Bootstrap Core CSS -->
         <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
-        <link href="/grupo30/css/bootstrap.css" rel="stylesheet">
+        <link href="css/bootstrap.css" rel="stylesheet">
 
         <!-- Custom CSS -->
 
-        <link href="/grupo30/css/user-create.css" rel="stylesheet">
+        <link href="css/user-create.css" rel="stylesheet">
 
         <!-- jQuery -->
-        <script src="/grupo30/js/jquery.js"></script>
+        <script src="js/jquery.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="/grupo30/js/bootstrap.min.js"></script>
-        <script src="/grupo30/js/bootstrap.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap.js"></script>
 
     </head>
 
-    <script src="/grupo30/js/createuser.js"> </script>
+    <script src="js/createuser.js"> </script>
 
     <body>
         <div class="container">

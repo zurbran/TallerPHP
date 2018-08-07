@@ -1,6 +1,6 @@
 <?php
     session_start();
     session_destroy();
-    $url = 'http://localhost/grupo30/index.php';
+    $url = 'index.php';
     header( "Location: $url" );
 ?>

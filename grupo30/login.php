@@ -8,7 +8,7 @@
             if(isset($_POST['password']))
             {
                 $_SESSION['password'] = $_POST['password'];
-                $url = 'http://localhost/grupo30/index.php';
+                $url = 'index.php';
                 header( "Location: $url" );
             }
             else

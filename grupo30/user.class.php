@@ -1,6 +1,6 @@
 <?php
 
-require_once "../grupo30/pdo-connect.php";
+require_once "pdo-connect.php";
 
 class User{
 

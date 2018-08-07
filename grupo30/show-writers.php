@@ -11,24 +11,24 @@
     <!-- Bootstrap Core CSS -->
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 
-    <link href="/grupo30/css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom CSS -->
 
-    <link href="/grupo30/css/single-book.css" rel="stylesheet">
-    <link href="/grupo30/css/media.css" rel="stylesheet">
+    <link href="css/single-book.css" rel="stylesheet">
+    <link href="css/media.css" rel="stylesheet">
 
     <!-- jQuery -->
-    <script src="/grupo30/js/jquery.js"></script>
+    <script src="js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="/grupo30/js/bootstrap.min.js"></script>
-    <script src="/grupo30/js/bootstrap.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.js"></script>
 
         <?php
-        require_once "../grupo30/pdo-connect.php";
-        require_once '../grupo30/paginator.class.php';
-        require_once "../grupo30/user.class.php";
+        require_once "pdo-connect.php";
+        require_once 'paginator.class.php';
+        require_once "user.class.php";
 
         $isLogged = false;
         $links= isset( $_GET['links'] ) ? $_GET['links'] : 8;
@@ -65,7 +65,7 @@
             catch(Exception $e)
             {
                 session_destroy();
-                $url = 'http://localhost/grupo30/show-writers.php?cred=false';
+                $url = 'show-writers.php?cred=false';
                 header( "Location: $url" );
             }
             include "loggednavbar.php";
@@ -109,8 +109,8 @@
                                     $encoded_image = base64_encode($image_data);
                         ?>
                             <tr>
-                            <th scope="row"><a href='/grupo30/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><img  src="data:image/jpg;base64,<?=$encoded_image?>" width='200' height='200' /> </a></th>
-                            <td><a href='/grupo30/single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
+                            <th scope="row"><a href='single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><img  src="data:image/jpg;base64,<?=$encoded_image?>" width='200' height='200' /> </a></th>
+                            <td><a href='single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
                                 <?php 
                                     $total = $results->data[$i]["cantidad"];
                                     $prestados = $results->data[$i]["prestados"];
