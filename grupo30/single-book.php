@@ -23,13 +23,14 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.js"></script>
+    <script src="js/single-book.js"></script>
 
         <?php
         require_once "pdo-connect.php";
         require_once "user.class.php";
 
         $isLogged = false;
-        $stmt= $pdo->prepare('SELECT l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, l.descripcion, l.id FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.id = :book');
+        $stmt= $pdo->prepare('SELECT l.baja, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, l.descripcion, l.id FROM libros l INNER JOIN autores a ON (l.autores_id = a.id) WHERE l.id = :book');
         $stmt->execute([':book' => $_GET['libro_id']]);
 
         $result= $stmt->fetchAll();
@@ -99,6 +100,15 @@
         <div class=row>
             <p class='sinopsis'>  <?=$result[0]['descripcion']?> </p>
         </div>
+<?php if($user->isLibrarian()){
+        if($result[0]['baja']==0){ 
+?>
+        <div class="row col-md-2">
+            <btn class="btn btn-primary btn-block" onclick="takedown(<?=$_GET['libro_id']?>)">Baja</btn>
+        </div>
+<?php   }
+    } 
+?>
     </div>
 </body>
 

@@ -52,7 +52,7 @@
     }
 
 
-    $query= "SELECT l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
+    $query= "SELECT l.baja, l.autores_id, l.id, l.portada, l.titulo, a.nombre, a.apellido, l.cantidad, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'RESERVADO') AS reservados, (SELECT COUNT(*) FROM operaciones o WHERE o.libros_id = l.id AND ultimo_estado = 'PRESTADO') AS prestados FROM libros l INNER JOIN autores a ON (l.autores_id = a.id)";
 
     $Paginator  = new Paginator( $pdoconn, $query, $sort, $order );
 
@@ -201,7 +201,18 @@
                             $encoded_image = base64_encode($image_data);
                     ?>
                         <tr>
+                    <?php 
+                        if($results->data[$i]['baja']==0){
+                    ?>
                         <th scope="row"><a href='single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><img  src="data:image/jpg;base64,<?=$encoded_image?>" width='200' height='200' /> </a></th>
+                    <?php
+                        }
+                        elseif($results->data[$i]['baja']==1){
+                    ?>
+                        <th scope="row"><a href='single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><img  src="img/Imagen_no_disponible.jpg" width='200' height='200' /> </a></th>
+                    <?php
+                        }
+                    ?>
                         <td><a href='single-book.php?libro_id=<?=$results->data[$i]["id"]?>'><?=$results->data[$i]["titulo"]?></a></td>
                         <td><a href='show-writers.php?author_id=<?=$results->data[$i]["autores_id"]?>&limit=5&page=1'><?=$results->data[$i]["nombre"]?> <?=$results->data[$i]["apellido"]?></a></td>
                         <?php 
@@ -256,7 +267,7 @@
                             $stockString .= ") </td>";
                             ?>
                         <td><?=$stockString?></td>
-                        <?php if((User::isLogged())&&($user->isReader())) : ?>
+                        <?php if((User::isLogged())&&($user->isReader())&&($results->data[$i]['baja']==0)) : ?>
                             <?php if(($disponibles > 0)&&(!$hasReachedLimit)&&(!$hasBook[$i])) : ?>
                                 <td><button type="button" onclick="reservate(<?=$results->data[$i]["id"]?>)" id="reserve<?=$results->data[$i]["id"]?>" class="btn btn-dark" >Reservar</button></td>
                             <?php else : ?>
