@@ -211,7 +211,7 @@ else{
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-8 col-md-12">
-                    <form id="signup" onsubmit="return validate()" action="user-create.php" method="post" enctype="multipart/form-data">
+                    <form id="signup" action="user-create.php" method="post" enctype="multipart/form-data">
                         <h2> Registrese <small> al portal de libros UNLP.</small></h2>
                         <hr class="colorgraph">
                         <div class="row">
@@ -286,7 +286,7 @@ else{
                         <hr class="colorgraph">
                         <div class="row">
                             <div class="col-xs-12 col-md-12">
-                                <input type="submit" id="submitbtn" class="btn btn-primary btn-block" onclick="validate()" value="Registrar" tabindex="7">
+                                <btn id="submitbtn" class="btn btn-primary btn-block" onclick="validate()" tabindex="7">Registrar</btn>
                             </div>
                         </div>
                     </form>

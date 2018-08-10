@@ -64,36 +64,36 @@ require_once "pdo-connect.php";
         </div>
         <hr/>
 
-        <div class="row">
-            <div class="col-md-8">
-                <p class='h1'> Mi Perfil </p>
-                <div class="row">
-                <div class="col-md-4">
-                    <div class="row">
-                        <p> Nombre: </p>
-                    </div>
-                    <div class="row">
-                        <p> Apellido: </p>
-                    </div>
-                    <div class="row">
-                        <p> Email: </p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <p> <?=$user->nombre?> </p>
-                    </div>
-                    <div class="row">
-                        <p> <?=$user->apellido?> </p>
-                    </div>
-                    <div class="row">
-                    <p> <?=$user->email?> </p>
-                    </div>
-                </div>
-                </div>
-            </div>
+        <div class="row offset-md-1">
+            <p class='h1'> Mi Perfil </p>
+        </div>
 
-            <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-4 offset-md-1">
+
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th colspan="2">Datos personales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td>Nombre:</td>
+                        <td><?=$user->nombre?></td>
+                        </tr>
+                        <tr>
+                        <td>Apellido:</td>
+                        <td><?=$user->apellido?></td>
+                        </tr>
+                        <tr>
+                        <td>Email:</td>
+                        <td><?=$user->email?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4 offset-md-3">
                     <?php
                         $image_data = $user->foto;
                         $encoded_image = base64_encode($image_data);
@@ -101,43 +101,13 @@ require_once "pdo-connect.php";
                     <img  src="data:image/jpg;base64,<?=$encoded_image?>" width='200' height='200' />
             </div>
 
-            <table class="table">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
-
+      
         </div>
         <?php
-if ($user->isReader()) {
-        include "lector.php";
-    }
-    ?>
+            if ($user->isReader()) {
+                    include "lector.php";
+            }
+        ?>
 
 </body>
 

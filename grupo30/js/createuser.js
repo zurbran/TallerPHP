@@ -111,10 +111,10 @@ function validate(){
     {
         postForm();
     }
-    return false;
+    //return false;
 }
 function postForm() {
     document.getElementById('signup').submit();
-    return true;
+    //return true;
 }
 

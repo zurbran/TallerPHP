@@ -10,6 +10,7 @@
         {
     ?>
     <div class="col-xs-16 col-sm-10 col-md-10">
+            <hr/>
             <table class="table table-bordered">
                 <thead class="thead-dark">
                     <tr>
